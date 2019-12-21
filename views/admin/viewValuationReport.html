@@ -1,0 +1,281 @@
+<!-- <style type="text/css">
+	 #section2, #section3
+	{
+		min-height: 800px;
+	}
+</style> -->
+
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">Mouseclicksys</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-bar navbar-kebab"></span>
+			<span class="navbar-toggler-bar navbar-kebab"></span>
+			<span class="navbar-toggler-bar navbar-kebab"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false; section4 = false">Home</a>
+				</li>
+				<li class="nav-item active">
+					<a class="nav-link" href="#valuationReport">Valuation Report</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#aumReport">AUM Report</a>
+				</li>
+				<!-- <li class="nav-item">
+					<a class="nav-link" href="#ltpReport">LTP Report</a>
+				</li> -->
+			</ul>
+		</div>
+
+		<div class="collapse navbar-collapse justify-content-end" id="navigation">
+			<form>
+				<div class="input-group no-border">
+					<input type="text" value="" class="form-control" placeholder="Search...">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<i class="now-ui-icons ui-1_zoom-bold"></i>
+						</div>
+					</div>
+				</div>
+			</form>
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="/" target="_self">
+						<i class="now-ui-icons users_single-02"></i> Logout
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div id="section1">
+	<div class="card" ng-init="getFamilyNames();getUCC()">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-2">
+					<!-- <span>Select Department</span> -->
+					<select class="form-ctrl">
+						<option>--Select Department--</option>
+						<option>A</option>
+						<option>B</option>
+					</select>
+				</div>
+				<div class="col-md-2">
+					<!-- <span>Select UCC</span> -->
+					<select id="uccforval" class="form-ctrl" ng-model="valuation.ucc" ng-options="UCC.UCC for UCC in uccs | orderBy:'UCC'"></select>
+				</div>
+				<div class="col-md-2">
+					<!-- <span>Select Family</span> -->
+					<select id="familynameforval" class="form-ctrl" ng-model="valuation.family" ng-options="family for family in familynames | orderBy:'family'">
+					</select>
+				</div>
+				<div class="col-md-2">
+					<!-- <span>Select start Date</span> -->
+					<div class="input-group" moment-picker="valuation.sdate" format="YYYY-MM-DD">
+						<input class="form-ctrl" placeholder="Select start date" ng-model="valuation.sdate" ng-model-options="{ updateOn: 'blur' }">
+					</div>
+				</div>
+				<div class="col-md-2">
+					<!-- <span>Select end Date</span> -->
+					<div class="input-group" moment-picker="valuation.edate" format="YYYY-MM-DD">
+						<input class="form-ctrl" placeholder="Select end date" ng-model="valuation.edate" ng-model-options="{ updateOn: 'blur' }">
+					</div>
+				</div>
+				<div class="col-md-2">
+					<button class="btn btn-success btn-sm" ng-click="generateValuationReport()">Show</button>
+					<a href="#valuationReport" target="_self" class="btn btn-success btn-sm">Clear</a>
+				</div>
+			</div>
+			<hr>
+	<!-- 	</div>
+	</div>
+
+	<div class="card">
+		<div class="card-body"> -->
+			<div class="row">
+				<div class="col-md-2" ng-click="section2 = true;section3 = false">
+					<div>
+					  Cheque Amt : <strong> {{reptamt2}}</strong> 
+					</div>
+				</div>
+				<div class="col-md-2" ng-click="section2 = false;section3 = true; pnl = false">
+					<div>
+					  Invested Amt : <strong> {{reptamt1}}</strong> 
+					</div>
+				</div>
+				<div class="col-md-2" ng-click="section2 = false;section3 = true;pnl = true">
+					<div>
+					  Valuation : <strong> {{reptval1}}</strong>  
+					</div>
+				</div>
+				<div class="col-md-2" ng-click="section2 = false;section3 = true;pnl = true">
+					<div> 
+					  PNL : <strong> {{reptpnl1}}</strong> 
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+		<!-- <div class="row">
+			<div class="col-md-7">
+				<h5 class="title">Valuation Report</h5>
+			</div>
+			<div class="col-md-5" align="center">
+				<div class="btn-group">
+					<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Options
+					</button>
+					<div class="dropdown-menu">
+					</div>
+				</div>
+			</div>
+		</div> -->
+</div>
+
+<div id="section2" ng-show="section2">
+			<table style="margin-top:30px" st-set-filter="customFilter" st-table="displayedCollection2" st-safe-src="chqueInreport" class="table table-bordered table-striped table-responsive" style="width: 100%"> 
+				<thead>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th><strong>{{calctotalamtarr.total}}</strong></th>
+						<th></th>
+						<th></th>
+					</tr>
+					<tr class="bg-info text-white text-center">
+						<th st-sort='Family'>Family</th>
+						<th st-sort='UCC' st-sort-default='true'>UCC</th>
+						<th st-sort='Bank'>Bank</th>
+						<th st-sort='AccountNo'>AccountNo</th>
+						<th st-sort='ChqNo'>ChqNo</th>
+						<th st-sort='Amount'>Amount</th>
+						<th st-sort='DepositedDate'>Date</th>
+						<th st-sort='Comments'>Comments</th>
+					</tr>
+
+					<tr>
+						<th><input st-search="Family" class="input-sm form-ctrl" type="text" ng-model="calctotalamtarr.family" ng-change="calctotalamt('Family','chqueInreport')" /></th>
+						<th><input st-search="UCC" class="input-sm form-ctrl" type="text" ng-model="calctotalamtarr.ucc" ng-change="calctotalamt('UCC','chqueInreport')"/></th>
+						<th><input st-search="Bank" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="AccountNo" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="ChqNo" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="Amount" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="DepositedDate" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="Comments" class="input-sm form-ctrl" type="text"/></th>  
+					</tr>
+				</thead>
+				<tbody style="font-size: 12px;">
+					<tr class="text-center" ng-repeat="(x,rec) in displayedCollection2">
+						<td>{{rec['Family']}}</td>
+						<td>{{rec['UCC']}}</td>
+						<td>{{rec['Bank']}}</td>
+						<td>{{rec['AccountNo']}}</td>
+						<td>{{rec['ChqNo']}}</td>
+						<td>{{rec['Amount']}}</td>
+						<td>{{rec['DepositedDate']}}</td>
+						<td>{{rec['Comments']}}</td>
+					</tr>
+				</tbody>
+				<tfoot>
+
+					<tr>
+						<td colspan="5" class="text-center">
+							<div st-pagination="" st-items-by-page="50" st-displayed-pages="10"></div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+
+
+		<div id="section3" ng-show="section3">
+
+			<table style="margin-top:30px" st-set-filter="customFilter" st-table="displayedCollection" st-safe-src="daywisereport" class="table table-bordered table-striped table-responsive" style="width: 100%"> 
+				<thead>
+					<tr>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th><strong>{{calctotalamtarr.total}}</strong></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th></th>
+						<th ng-show="pnl"><strong>{{calctotalamtarr.total2}}</strong></th>
+						<th></th>
+					</tr>
+					<tr class="bg-info text-white">
+						<th st-sort='Family'>Family</th>
+						<th st-sort='UCC' st-sort-default='true'>UCC</th>
+						<th st-sort='Category'>Category</th>
+						<th st-sort='SchemeCode'>SchemeCode</th>
+						<th st-sort='SchemeName'>SchemeName</th>
+						<th st-sort='Folio'>Folio</th>
+						<th st-sort='Amount'>Amount</th>
+						<th st-sort='Units'>Units</th>
+						<th st-sort='NAV'>NAV</th>
+						<th st-sort='OrderNo'>OrderNO</th>
+						<th st-sort='Date'>Date</th>
+						<th st-sort='pnl' ng-show="pnl">PNL</th>
+						<th st-sort='val' ng-show="pnl">VAL</th>
+						<th st-sort='Comments'>Comments</th>
+					</tr>
+
+					<tr>
+						<th><input st-search="Family" class="input-sm form-ctrl" type="text" ng-model="calctotalamtarr.family" ng-change="calctotalamt('Family','daywisereport')" /></th>
+						<th><input st-search="UCC" class="input-sm form-ctrl" type="text" ng-model="calctotalamtarr.ucc" ng-change="calctotalamt('UCC','daywisereport')"/></th>
+						<th><input st-search="Category" class="input-sm form-ctrl" type="text" /></th>
+						<th><input st-search="SchemeCode" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="SchemeName" class="input-sm form-ctrl" type="text" ng-model="calctotalamtarr.sname" ng-change="calctotalamt('SchemeName','daywisereport')"/></th>
+						<th><input st-search="Folio" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="Amount" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="Units" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="NAV" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="OrderNo" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="Date" class="input-sm form-ctrl" type="text"/></th>
+						<th ng-show="pnl"><input st-search="pnl" class="input-sm form-ctrl" type="text"/></th>
+						<th ng-show="pnl"><input st-search="val" class="input-sm form-ctrl" type="text"/></th>
+						<th><input st-search="Comments" class="input-sm form-ctrl" type="text"/></th> 
+					</tr>
+				</thead>
+				<tbody style="font-size: 12px;">
+					<tr ng-repeat="(x,rec) in displayedCollection" ng-class="{ 'title' : rec['liquid'] == true }">
+						<td width="2% !important">{{rec['Family']}}</td>
+						<td width="8%">{{rec['UCC']}}</td>
+						<td width="20%">{{rec['Category']}}</td>
+						<td>{{rec['SchemeCode']}}</td>
+						<td width="20%">{{rec['SchemeName']}}</td>
+						<td>{{rec['Folio']}}</td>
+						<td class="text-center">{{rec['Amount']}}</td>
+						<td>{{rec['Units']}}</td>
+						<td>{{rec['NAV']}}</td>
+						<td>{{rec['OrderNo']}}</td>
+						<td width="8%">{{rec['Date']}}</td>
+						<td ng-show="pnl" class="text-center">{{rec['pnl']}}</td>
+						<td ng-show="pnl" class="text-center title">{{rec['val']}}</td>
+						<td>{{rec['Comments']}}</td>
+					</tr>
+				</tbody>
+				<tfoot>
+
+					<tr>
+						<td colspan="5" class="text-center">
+							<div st-pagination="" st-items-by-page="50" st-displayed-pages="10"></div>
+						</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>

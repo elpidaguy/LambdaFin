@@ -1,0 +1,303 @@
+<style>
+.modal-lg {
+    max-width: 80% !important;
+}
+</style>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mouseclicksys</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#chqueIn">Cheque In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewToday">Today</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#newviewDaywise">Daywise</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <form>
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="now-ui-icons ui-1_zoom-bold"></i>
+            </div>
+          </div>
+        </div>
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" target="_self">
+            <i class="now-ui-icons users_single-02"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div class="card" ng-init="getAssignedCheques();">
+        <div class="card-header">
+        
+        <div class="row">
+          <div class="col-md-6" >
+              <h5 class="title">Used Cheques</h5>
+          </div>
+          <div class="col-md-6" align="center">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Options
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#assignslip" ng-click="getsliplesscheques()">Assign Slip Number</a>
+                    <a class="dropdown-item" ng-href="#dishonoredCheques">Show Dishonored Cheques</a>
+                    <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#uploadChequeExcel">Export Excel</a>
+                    <!-- <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#createFamily">Create Family</a> -->
+                </div>
+          </div>
+        </div>
+        </div>
+      
+          <div class="card-body">
+        <table style="margin-top:30px" st-table="displayedCollection" st-safe-src="finas" class="table table-bordered table-striped table-responsive table-condensed" > 
+            <thead>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th><strong>{{calctotalamtarr.total}}</strong></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+            <tr class="bg-info text-white text-center">
+                <th st-sort="Family">Family</th>
+                <th st-sort="UCC">UCC</th>
+                <th st-sort="Bank">Bank</th>
+                <th st-sort="AccountNo">Acc No</th>
+                <th st-sort="ChqNo">Cheque</th>
+                <th st-sort="Amount">Amount</th>
+                <th st-sort="DepositedDate">DepositedDate</th>
+                <th st-sort="Slip" st-sort-default="reverse" st-skip-natural="true">Slip</th>
+                <th>Comments</th>
+              <!-- <th class="bg-info text-white" ng-repeat="head in headers" st-sort="{{head}}">
+                {{head|titlecase}}
+              </th> -->
+              <th class="bg-info text-white">Action</th>
+            </tr>
+      
+            <tr>
+<!--               <th ng-repeat="head in headers">
+                <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+              </th> -->
+              <th><input type="text" class="input-sm form-ctrl" st-search="Family" ng-model="calctotalamtarr.family" ng-change="calctotalamt('Family','finas')"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="UCC" ng-model="calctotalamtarr.ucc" ng-change="calctotalamt('UCC','finas')"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="Bank"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="AccountNo"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="ChqNo"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="Amount"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="DepositedDate"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="Slip"></th>
+              <th><input type="text" class="input-sm form-ctrl" st-search="Comments"></th>
+            </tr>
+            </thead>
+            <tbody style="font-size: 12px;">
+            <tr class="text-center" ng-repeat="rec in displayedCollection">
+                <td >{{rec['Family']}}</td>
+                <td >{{rec['UCC']}}</td>
+                <td >{{rec['Bank']}}</td>
+                <td >{{rec['AccountNo']}}</td>
+                <td >{{rec['ChqNo']}}</td>
+                <td >{{rec['Amount']}}</td>
+                <td >{{rec['DepositedDate']}}</td>
+                <td >{{rec['Slip']}}</td>
+                <td >{{rec['Comments']}}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-sm btn-info dropdown-toggle btn-icon no-caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="now-ui-icons loader_gear"></i>
+                        </button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#dishontranlist" ng-click="getuccdatewisetransactions(rec['UCC'],rec['DepositedDate']);dishonchqdata.Slip=rec['Slip'];dishonchqdata.UCC=rec['UCC'];dishonchqdata.ChqNo=rec['ChqNo'];dishonchqdata.Amount=rec['Amount']">Dishonour</a>
+                            <!-- <a class="dropdown-item" href="" target="_self" ng-click="dishonourcheque(rec['Slip'],rec['ChqNo'])">Dishonour</a> -->
+                            <a class="dropdown-item" href="" target="_self" >Partial Dishonour</a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+              
+              <tr>
+                    <td colspan="5" class="text-center">
+                        <div st-pagination="" st-items-by-page="100" st-displayed-pages="10"></div>
+                    </td>
+              <!-- <td colspan="{{headers.length}}" class="text-center">
+                <div st-pagination="" st-items-by-page="itemsByPage"></div>
+              </td> -->
+            </tr>
+            </tfoot>
+      
+            </table>
+      
+          </div>
+        </div>
+      </div>
+      
+
+      <div class="modal fade" id="dishontranlist" tabindex="-1" role="dialog" aria-labelledby="dishontranlistLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-info text-white text-center">
+                    <h5 class="modal-title" id="dishontranlistLabel">Dishonour Cheque</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-info"> Slip - {{dishonchqdata['Slip']}} | UCC - {{dishonchqdata['UCC']}} | Cheque No - {{dishonchqdata['ChqNo']}} | Amount - {{dishonchqdata['Amount']}}</div>
+                        </div>
+                        <div class="col-md-6" align="right">
+                            <button class="btn btn-sm btn-success" ng-click="dishonourcheque()">Move to Rejected</button>
+                        </div>
+                    </div>
+                    <table style="margin-top:30px" st-table="displayedCollection4" st-safe-src="rejtrans" class="table table-bordered table-striped" > 
+                        <thead>
+                            <tr class="bg-info text-white">
+                                <th class="bg-info text-white" ng-repeat="head in rejtranheaders" st-sort="{{head}}" st-skip-natural="true">
+                                    {{head|titlecase}}
+                              </th>
+                              <th></th>
+                                <!-- <th st-sort="Family">Family</th>
+                                <th st-sort="UCC">UCC</th>
+                                <th st-sort="Bank">Bank</th>
+                                <th st-sort="AccountNo">Acc No</th>
+                                <th st-sort="ChqNo">Cheque</th>
+                                <th st-sort="Amount">Amount</th>
+                                <th st-sort="DepositedDate">DepositedDate</th>
+                                <th st-sort="Slip" st-sort-default="reverse">Slip</th>
+                                <th>Comments</th> -->
+                            </tr>
+                          
+                            <tr>
+                                <th ng-repeat="head in rejtranheaders">
+                                    <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 12px;">
+                            <tr class="text-center" ng-repeat="(x,rec) in displayedCollection4">
+                                <td >{{rec['Category']}}</td>
+                                <td >{{rec['SchemeCode']}}</td>
+                                <td >{{rec['SchemeName']}}</td>
+                                <td >{{rec['Folio']}}</td>
+                                <td >{{rec['Amount']}}</td>
+                                <td >{{rec['OrderNo']}}</td>
+                                <td >{{rec['Date']}}</td>
+                              <td><input id="selectrejecttrans" type="checkbox" ng-model="rejecttranslist.selected[x]" ng-true-value="'{{rec['OrderNo']}}'" ng-false-value="null"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot style="display: none;">          
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <div st-pagination="" st-items-by-page="100" st-displayed-pages="10"></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+               </div>
+            </div>
+          </div>
+
+
+      <div class="modal fade" id="assignslip" tabindex="-1" role="dialog" aria-labelledby="assignslipLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                <div class="modal-header bg-info text-white text-center">
+                    <h5 class="modal-title" id="assignslipLabel">Assign Slip Numbers</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+
+                        </div>
+                        <div class="col-md-6" align="right">
+                            <button class="btn btn-sm btn-success" ng-click="addslipnumber()">Add</button>
+                        </div>
+                    </div>
+                    <table style="margin-top:30px" st-table="displayedCollection5" st-safe-src="slipless" class="table table-bordered table-striped" > 
+                        <thead>
+                            <tr class="bg-info text-white">
+                                <th st-sort="Family">Family</th>
+                                <th st-sort="UCC">UCC</th>
+                                <th st-sort="Bank">Bank</th>
+                                <th st-sort="AccountNo">Acc No</th>
+                                <th st-sort="ChqNo">Cheque</th>
+                                <th st-sort="Amount">Amount</th>
+                                <th st-sort="DepositedDate">DepositedDate</th>
+                                <th st-sort="Slip" st-sort-default="reverse">Slip</th>
+                                <th>Comments</th>
+                            </tr>
+                          
+                            <tr>
+                                <th ng-repeat="head in headers">
+                                    <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+                                </th>
+                                <th></th>   
+                            </tr>
+                        </thead>
+                        <tbody style="font-size: 12px;">
+                            <tr class="text-center" ng-repeat="rec in displayedCollection5">
+                                <td >{{rec['Family']}}</td>
+                                <td >{{rec['UCC']}}</td>
+                                <td >{{rec['Bank']}}</td>
+                                <td >{{rec['AccountNo']}}</td>
+                                <td >{{rec['ChqNo']}}</td>
+                                <td >{{rec['Amount']}}</td>
+                                <td >{{rec['DepositedDate']}}</td>
+                                <td ><input type="text" ng-model="rec['Slip']"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot style="display: none;">          
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    <div st-pagination="" st-items-by-page="100" st-displayed-pages="10"></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+               </div>
+            </div>
+          </div>
+      
+      </div>
+      </div>
+      </div>

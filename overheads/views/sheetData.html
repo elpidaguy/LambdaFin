@@ -1,0 +1,149 @@
+<style type="text/css">
+	table.myTable td {
+  height: 30px !important;
+  overflow: hidden;
+  table-layout: fixed;
+  min-width: 50px !important;
+}
+</style>
+<div class="container">
+	<div class="card">
+		<div class="card-header text-center">
+			Overheads 
+		</div>
+		<div class="card-body" ng-init="getAllUCC();">
+			<div class="row">
+                <div class="form-group col">
+                    <label for="ucc" class="col col-form-label">Select UCC</label>
+                    <div class="col-sm-12">
+                        <select id="ucc" class="form-control" ng-model="ucc" ng-options="ucc['UCC'] for ucc in uccList | orderBy:'UCC'" ng-change="getSheetByUcc(ucc);"></select>
+                    </div>
+                </div>
+
+                <div class="form-group col">
+                    <label for="sheet" class="col col-form-label">Select Sheet Schema</label>
+                    <div class="col-sm-12">
+                        <select id="sheet" class="form-control" ng-model="selectedSheet" ng-options="sheet.sheetName for sheet in sheetList | orderBy:'sheetName'" ng-change="getSheetData(selectedSheet);"></select>
+                    </div>
+                </div>
+            </div>
+            <h3>{{sheetSchema.sheetName}}</h3>
+		</div>
+	</div>
+<div ng-show="sheetData.length>0">
+	<div class="container" style="overflow-x: scroll;">
+		<div class="row">
+			<button class="btn btn-success" ng-click="saveCalculatedSheet();">Save</button>
+        	<!-- {{sheetData}}
+        	{{sheetSchema}} <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Open modal
+            </button>-->
+        </div>
+
+            <div class="row text-center"> 
+            	<table class="table table-bordered myTable"> 
+            		<tr>
+            		<th>Date</th>
+            		<th ng-repeat="dept in sheetSchema.department" >{{dept.departName}}
+                       </th>
+
+                    </tr>
+
+            		<tr>
+            			<td><table class="table table-bordered myTable">
+            				<tr>
+            					<td></td>
+            				</tr>
+                            <tr>
+                                <td></td>
+                            </tr>
+            				<tr ng-repeat="dt in sheetData[0].date">
+                              <!--  <td>{{dt}}</td>  -->
+            				    <td><input type="" name="" ng-disabled="true" value="{{dt}}-{{sheetData[0].month}}" style="max-width: 80px !important;"></td>
+                                
+            				</tr>
+            				</table>
+            			</td>
+            			<td ng-repeat="dept in sheetSchema.department" ng-init="deptindex=$index">
+            				<table class="table table-bordered myTable">
+            					<tr>
+            						<td ng-repeat="colname in dept.col">
+            							{{colname.colName}}<!-- <br>
+                                        <span ng-if="colname.isFormula">{{colname.formula}}</span> nairkirshnendu09@gmail.com-->
+            						</td>
+            					</tr>
+                                <tr>
+                                    <td ng-repeat="colname in dept.col">
+
+                                        <div ng-if="colname.isCarryForward"><input type="" name="" ng-model="sheetData[0].department[deptindex].col[$index].opening" style="max-width: 80px !important;"></div>
+                                       
+                                        <!-- {{colname.colName}} --><!-- <br>
+                                        <span ng-if="colname.isFormula">{{colname.formula}}</span> -->
+                                    </td>
+                                </tr>
+            					<tr ng-repeat="sd in sheetData[0].date">
+            						<td ng-repeat="cd in dept.col">
+                                        <!-- {{sheetData.department[$parent.$parent.$index].col[$index].data[$parent.$index]}} -->
+            							<!-- {{cd.isFormula}} -->
+            						<input type="text" ng-model="sheetData[0].department[$parent.$parent.$index].col[$index].data[$parent.$index]" ng-disabled="cd.isFormula || !cd.isEditable" value="{{sheetData.department[$parent.$parent.$index].col[$index].data[$parent.$index]}}" ng-blur="calculateSheet();" style="max-width: 80px !important;" data-toggle="tooltip" title="{{$parent.$index+1}}-{{sheetData[0].month}}">	
+            						</td>
+            					</tr>
+            					<input type="hidden" ng-model="sheetData.department[$parent.$parent.$index].col[$index].colName">
+            				</table>
+            			</td>
+            		</tr>
+            	</table>
+            </div>
+	</div>
+</div>
+
+<div ng-show="sheetData.length <= 0">
+    <button class="btn btn-success" data-toggle="modal" data-target="#createSheetModal">Create Sheet</button>
+</div>
+
+
+<div class="modal fade" id="createSheetModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Create Sheet</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    {{sheetSchema.sheetName}}
+                                </div>
+
+                                <div class="col">
+                                    <div class="input-group" moment-picker="createSheetmonth" format="MM-YYYY">
+                                        <input class="form-ctrl" placeholder="Select Month" ng-model="createSheetmonth" ng-model-options="{ updateOn: 'blur' }">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-primary" ng-click="createNewSheet(sheetSchema._id);">Create</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div> -->
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+</div>
+</div>
+</div>

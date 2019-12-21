@@ -1,0 +1,620 @@
+<style>
+  .modal-lg {
+    max-width: 90% !important;
+  }
+  
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+</style>
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mouseclicksys</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#chqueIn">Cheque In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewToday">Today</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#newviewDaywise">Daywise</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <form>
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="now-ui-icons ui-1_zoom-bold"></i>
+            </div>
+          </div>
+        </div>
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" target="_self">
+            <i class="now-ui-icons users_single-02"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div class="card" ng-init="getChqIns();">
+        <div class="card-header">
+          <div class="row">
+           <div class="col-md-8" >
+              <h5 class="title">Unused Cheque List ({{department | titlecase}})</h5>
+           </div>
+          <div class="col-md-4" align='center'>
+            <!-- Example single danger button -->
+<!--             <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#preassignedlist">Show Pre-Assigned Cheques</button> -->
+            <!-- <a type="btn" class="btn btn-success" ng-href="#assignedCheques">Used Cheques</a> -->
+
+            <button type="button" class="btn btn-success" ng-show="showAssign" ng-click="toggleAssignChq();preassign()">Confirm Assign</button>
+            <button type="button" class="btn btn-danger" ng-show="showAssign" ng-click="toggleAssignChq();">Cancel</button>
+              
+            <div class="btn-group">
+              <button type="button" class="btn btn-danger dropdown-toggle" ng-show="!showAssign" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Options
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#addchquein" ng-click="getUCC();">Add New Cheque</a>
+                <a class="dropdown-item" href="" target="_self" ng-click="toggleAssignChq()">Assign Cheques</a>
+                <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#preassignedlist">Show Pre-Assigned Cheques</a>
+                <a class="dropdown-item" ng-href="#assignedCheques">Show Used Cheques</a>
+                <!-- <a class="dropdown-item" ng-href="#dishonoredCheques">Show Dishonored Cheques</a> -->
+                <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#uploadChequeExcel">Import Excel</a>
+                <!-- <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#createFamily">Create Family</a> -->
+              </div>
+            </div>
+          </div>
+           
+        </div>
+        
+        <!-- <div ng-show="showAssign" class="container">
+          <span>Cheque Numbers :: {{chequelist.selected}}</span>
+        </div> -->
+        
+      </div>
+          <div class="card-body">
+            <table datatable="ng" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th class="bg-info text-white" ng-show="showAssign">Sel</th>
+                  <!-- <th class="bg-info text-white">Family</th>
+                  <th class="bg-info text-white">UCC</th>
+                  <th class="bg-info text-white">Bank</th>
+                  <th class="bg-info text-white">ACC</th>
+                  <th class="bg-info text-white">ChqNo</th>
+                  <th class="bg-info text-white">Amount</th>
+                  <th class="bg-info text-white">DespositedDate</th>
+                  <th class="bg-info text-white">Slip</th>
+                  <th class="bg-info text-white">Comments</th> -->
+                  <th class="bg-info text-white" ng-repeat="head in headers">
+                    {{head|titlecase}} 
+                  </th>
+                  <th class="bg-info text-white"><i class="now-ui-icons loader_gear"></i></th>
+                </tr>
+              </thead>
+              <tbody>
+
+            <tr ng-repeat="(x,rec) in chqinList | filter: {preas: 'false',finas: 'false'}" class="text-center" ng-class="{ 'text-danger title' : rec['AccountNo'] == 'WRONG ORDERS' }">
+              <td ng-show="showAssign">
+                <!-- <div class="form-check">
+                    <label class="form-check-label">
+                        <input id="assign" class="form-check-input" type="checkbox" ng-model="chequelist.selected[x]" ng-true-value="'{{rec['ChqNo']}},{{rec['AccountNo']}}'" ng-false-value="null">
+                        <span class="form-check-sign">
+                            <span class="check"></span>
+                        </span>
+                    </label>
+                </div> -->
+              <input id="assign" type="checkbox" ng-model="chequelist.selected[x]" ng-true-value="'{{rec['ChqNo']}},{{rec['AccountNo']}}'" ng-false-value="null">
+              </td>
+              <!-- <td>Assign</td> -->
+              <td >{{rec['Family']}}</td>
+              <td >{{rec['UCC']}}</td>
+              <td >{{rec['Bank']}}</td>
+              <td>{{rec['AccountNo']}}</td>
+              <td >{{rec['ChqNo']}}</td>
+              <td >{{rec['Amount']}}</td>
+              <!-- <td >{{rec['DepositedDate']}}</td> -->
+              <!-- <td >{{rec['TotalSum']}}</td> -->
+              <!-- <td >{{rec['Slip']}}</td> -->
+              <td >{{rec['Comments']}}</td>
+            
+              <td>
+                <div class="btn-group">
+                    <button type="button" style="opacity: 0.5" class="btn btn-sm btn-danger dropdown-toggle btn-icon no-caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="now-ui-icons loader_gear"></i>
+                      </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#editChequeIn" ng-click="getChequeDetails(rec['UCC'],rec['ChqNo']);getUCC();">Edit</a>
+                      <a class="dropdown-item" href="#">Delete</a>
+                    </div>
+                  </div>
+                </td>
+            </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+        <div class="modal fade" id="addchquein" tabindex="-1" role="dialog" aria-labelledby="addchqueinmodallabel" aria-hidden="true" >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-info text-white text-center">
+                  <h5 class="modal-title" id="addchqueinmodallabel">ChequeIn for Department {{department | titlecase}}</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form>   
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="ucc" class="col col-form-label">Select UCC</label>
+                                <div class="col-sm-12">
+                                    <select id="ucc" class="form-control" ng-change="getClientByucc(chqIn.ucc['UCC'])" ng-model="chqIn.ucc" ng-options="ucc['UCC'] for ucc in uccs | orderBy:'UCC'"></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col">
+                                <label for="familyname" class="col col-form-label">Family</label>
+                                <div class="col-sm-12">
+                                    <input id="family" type="text" class="form-control" ng-model="chqIn.Family" ng-value="chqIn.Family=clientData['Family']" placeholder="Family">
+                                </div>
+                            </div>
+                        </div>      
+      
+                        <div class="row">
+                            <div class="form-group col">
+                              <label for="bankname1" class="col col-form-label">Bank Name</label>
+                              <div class="col-sm-12">
+                                <select id="bankname1" class="form-control" ng-change="getAccNo();" ng-model="chqIn.Bank">
+                                    <option >{{clientData['Bank1']}}</option>
+                                    <option >{{clientData['Bank2']}}</option>
+                                    <option >{{clientData['Bank3']}}</option>
+                                </select>
+                              </div>
+                          </div>
+
+                          <div class="form-group col">
+                                <label for="acc" class="col col-form-label">Account Number</label>
+                                <div class="col-sm-12">
+                                  <input type="text" class="form-control" ng-model="chqIn.AccountNo" ng-value="chqIn.AccountNo" placeholder="Account Number" readonly>
+                                 <!--  <select id="acc" class="form-control" ng-init="chqIn.Acc = clientData['Acc1']" ng-model="chqIn.AcccountNo">
+                                      <option value="clientData['Acc1']">{{clientData['Acc1']}}</option>
+                                      <option value="clientData['Acc2']">{{clientData['Acc2']}}</option>
+                                      <option value="clientData['Acc3']">{{clientData['Acc3']}}</option>
+                                  </select> -->
+                                </div>
+                            </div>
+      
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="chqNo" class="col col-form-label">Cheque Number</label>
+                                <div class="col-sm-12">
+                                <input id="chqNo" type="text" class="form-control" ng-model="chqIn.ChqNo" placeholder="Cheque Number" required>
+                                </div>
+                            </div>
+          
+                            <!-- <div class="form-group col">
+                                <label for="ddate" class="col col-form-label">Deposite Date</label>
+                                <div class="col-sm-12">
+                                <input id="ddate" type="date" class="form-control" ng-model="chqIn.DepositeDate" required>
+                                </div>
+                            </div> -->
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="total" class="col col-form-label">Amount</label>
+                                <div class="col-sm-12">
+                                <input id="total" type="text" class="form-control" ng-model="chqIn.Amount" placeholder="Amount" required>
+                                </div>
+                            </div>
+            
+<!--                             <div class="form-group col">
+                                <label for="comments" class="col col-form-label">Comments</label>
+                                <div class="col-sm-12">
+                                <input id="comments" type="text" class="form-control" ng-model="chqIn.Comments" required>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div align="center">
+                          <button type="button" class="btn btn-success" ng-click="addChqueIn();">Add</button>                          
+                        </div>
+                    </form>
+                </div>
+               </div>
+          
+              
+            
+            </div>
+          </div>
+      
+      
+          <div class="modal fade" id="editChequeIn" tabindex="-1" role="dialog" aria-labelledby="editChequeInmodallabel" aria-hidden="true" >
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-warning text-white text-center">
+                  <h5 class="modal-title" id="editChequeInmodallabel">Edit Cheque In</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form>   
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="ucc" class="col col-form-label">UCC</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" ng-model="CheqData.UCC" ng-value="CheqData.UCC" readonly>
+
+                                    <!-- <select id="ucc" class="form-control" ng-change="getClientByucc(chqIn.ucc['UCC'])" ng-model="chqIn.ucc" ng-options="ucc['UCC'] for ucc in uccs"></select> -->
+                                </div>
+                            </div>
+
+                            <div class="form-group col">
+                                <label for="familyname" class="col col-form-label">Family</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" ng-model="CheqData.Family" ng-value="clientData['Family']" readonly required>
+                                </div>
+                            </div>
+                        </div>      
+      
+                        <div class="row">
+                            <div class="form-group col">
+                              <label for="bankname1" class="col col-form-label">Bank Name</label>
+                              <div class="col-sm-12">
+                                <select id="bankname1" class="form-control" ng-init="chqIn.Bank = clientData['Bank1']" ng-model="CheqData.Bank">
+                                    <option value="{{clientData['Bank1']}}">{{clientData['Bank1']}}</option>
+                                    <option value="{{clientData['Bank2']}}">{{clientData['Bank2']}}</option>
+                                    <option value="{{clientData['Bank3']}}">{{clientData['Bank3']}}</option>
+                                </select>
+                              </div>
+                          </div>
+
+                          <div class="form-group col">
+                                <label for="acc" class="col col-form-label">Account Number</label>
+                                <div class="col-sm-12">
+                                  <select id="acc" class="form-control" ng-init="chqIn.AccountNo = clientData['Acc1']" ng-model="CheqData.AccountNo">
+                                      <option value="{{clientData['Acc1']}}">{{clientData['Acc1']}}</option>
+                                      <option value="{{clientData['Acc2']}}">{{clientData['Acc2']}}</option>
+                                      <option value="{{clientData['Acc3']}}">{{clientData['Acc3']}}</option>
+                                  </select>
+                                </div>
+                            </div>
+      
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="chqNo" class="col col-form-label">Cheque Number</label>
+                                <div class="col-sm-12">
+                                <input id="chqNo" type="text" class="form-control" ng-model="CheqData.ChqNo"  ng-value="CheqData.ChqNo" required>
+                                </div>
+                            </div>
+          					
+          					<div class="form-group col">
+                                <label for="amount" class="col col-form-label">Amount</label>
+                                <div class="col-sm-12">
+                                <input id="amount" type="text" class="form-control" ng-model="CheqData.Amount"  ng-value="CheqData.Amount" required>
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                        <div class="row">
+
+                        	<div class="form-group col">
+                                <label for="ddate" class="col col-form-label">Deposite Date</label>
+                                <div class="col-sm-12">
+                                <input id="ddate" type="date" class="form-control" ng-model="CheqData.DepositedDate"  ng-value="CheqData.DepositedDate" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group col">
+                                <label for="total" class="col col-form-label">Total Sum</label>
+                                <div class="col-sm-12">
+                                <input id="total" type="text" class="form-control" ng-model="CheqData.TotalSum"  ng-value="CheqData.TotalSum" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row"> 
+                        	<div class="form-group col">
+                                <label for="comments" class="col col-form-label">Comments</label>
+                                <div class="col-sm-12">
+                                <input id="comments" type="text" class="form-control" ng-model="CheqData.Comment"  ng-value="CheqData.Comment" required>
+                                </div>
+                            </div>
+                        </div>
+         
+                        <button type="button" class="btn btn-primary" ng-click="saveChequeIn();">Save Data</button>
+                    </form>
+                </div>
+               </div>
+            </div>
+          </div>
+      
+      
+        <div class="modal fade" id="uploadChequeExcel" tabindex="-1" role="dialog" aria-labelledby="uploadChequeExcelLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-success text-white text-center">
+                  <h5 class="modal-title" id="uploadChequeExcelLabel">Upload Cheque-In Excel File</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+          
+                  <div class="text-center">
+                    <div class="form-group">
+                      <label for="fup" class="btn btn-info btn-file">Browse for File</label>
+                    <div class="col-sm-10">
+                      <input type="file" file-model="chqinlistexcel" class="btn btn-info btn-xs" id="fup" style="display: none;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                    </div>
+                  </div>
+                  </div>
+          
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary btn-round" ng-click="uploadchequinexcel();">Upload</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        
+          <div class="modal fade" id="preassignedlist" tabindex="-1" role="dialog" aria-labelledby="preassignedlistLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-info text-white text-center">
+                  <h5 class="modal-title" id="preassignedlistLabel">Pre-Assigned Cheques</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+                    <table st-set-filter="customFilter" st-table="displayedCollection" st-safe-src="chqinList" class="table table-bordered table-striped">
+                        <thead>
+                          <!-- <tr>
+                            <th class="bg-info" ng-show="showAssign"></th>
+                            <th class="bg-info text-white" ng-repeat="head in headers">
+                              {{head|titlecase}} 
+                            </th>
+                            <th class="bg-info text-white"><i class="now-ui-icons loader_gear spin"></i></th>
+                          </tr> -->
+
+                          <tr>
+                              <th class="bg-info text-white" ng-repeat="head in headers" st-sort="{{head}}">
+                                {{head|titlecase}} 
+                              </th>
+                              <th class="bg-info text-white"><i class="now-ui-icons loader_gear"></i></th>
+                            </tr>
+                          <tr>
+                              <th ng-repeat="head in headers">
+                             <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+                              </th>
+                              <th></th>   
+                            </tr>
+
+                        </thead>
+                        <tbody>
+          
+                            <tr ng-repeat="(x,rec) in displayedCollection | filter: {preas: 'true',finas: 'false'}" class="text-center">
+                                <!-- <td>Assign</td> -->
+                                <td >{{rec['Family']}}</td>
+                                <td >{{rec['UCC']}}</td>
+                                <td >{{rec['Bank']}}</td>
+                                <td >{{rec['AccountNo']}}</td>
+                                <td >{{rec['ChqNo']}}</td>
+                                <td >{{rec['Amount']}}</td>
+                                <!-- <td >{{rec['DepositedDate']}}</td> -->
+                                <!-- <td >{{rec['TotalSum']}}</td> -->
+                                <!-- <td >{{rec['Slip']}}</td> -->
+                                <td >{{rec['Comments']}}</td>
+                              
+                                <td>
+                                  <!-- Example single danger button -->
+                                  <div class="btn-group">
+                                      <button type="button" class="btn btn-sm btn-danger dropdown-toggle btn-icon no-caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="now-ui-icons loader_gear"></i>
+                                        </button>
+                                      <!-- <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
+                                      </button> -->
+                                      <div class="dropdown-menu">
+                                        <button class="dropdown-item" data-toggle="modal" data-target="#assignchequemodal" ng-click="getuccdatafromdaywise(rec['UCC']);setchequeamount(rec['Amount']); assignchqinfo.assignucc = rec['UCC']; assignchqinfo.assignfamily=rec['Family']; assignchqinfo.assignchqno=rec['ChqNo']">Assign this Cheque</button>
+                                        <button class="dropdown-item" ng-click="preassignremove(rec['ChqNo'])">Unassign this Cheque</button>
+                                      </div>
+                                    </div>
+                                  <!-- <button class="btn btn-success btn-fab btn-icon btn-round" style="align:right;" ng-click="getAmcDetails(rec['_id'])" data-toggle="modal" data-target="#editAmc"><i class="fa fa-pencil"></i></button>
+                                  <button class="btn btn-danger btn-fab btn-icon btn-round" onclick="return confirm('Do You Want To Delete'+rec['Scheme_Code'])" ng-click="deleteAmc(rec['_id'])"><span class="fa fa-trash" data-toggle="tooltip" title="DELETE"></span></button> -->
+                                </td>
+                              </tr>
+                        </tbody>
+<!-- 
+                        <tfoot>
+                          <tr>
+                            <td colspan="5" class="text-center">
+                              <div st-pagination="" st-displayed-pages="5"></div>
+                            </td>
+                          </tr>
+                        </tfoot> -->
+                      </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="modal fade" id="assignchequemodal" tabindex="-1" role="dialog" aria-labelledby="assignchequemodalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-success text-white text-center">
+                  <h6 class="modal-title" id="assignchequemodal">Assign cheque :: UCC - <span class="title text-white">{{assignchqinfo['assignucc']}} </span> | Family - <span class="title text-white">{{assignchqinfo['assignfamily']}}</span> | Cheque No - <span class="title text-white">{{assignchqinfo['assignchqno']}}</span></h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+
+                    <div class="row">
+                    <!-- <div class="col-md-4">
+                      <div class="card-body bg-info">
+                          UCC : <span class="title text-white">{{assignchqinfo['assignucc']}} </span> :: Family : <span class="title text-white">{{assignchqinfo['assignfamily']}}</span> :: Cheque No : <span class="title text-white">{{assignchqinfo['assignchqno']}}</span>
+                      </div>
+                    </div> -->
+
+                    <div class="col-md-3">
+                        <span class="alert alert-info title">Amount : &#8377 {{total}} </span> 
+                    </div>
+
+                    <div class="col-md-3">
+                        <!-- <div class="alert alert-info">
+                            Total / Cheque : <span class="title text-white"> &#8377 {{total}} / &#8377 {{chequeamount}}</span>
+                        </div> -->
+                      <span class="alert alert-info title"> Cheque : &#8377 {{chequeamount}}</span> 
+                      <!-- <div class=""></div> -->
+                    </div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-4" align="right">
+                      <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addnewschememodal" ng-click="getuccwisenewschemes(assignchqinfo['assignucc'])">Add New Scheme</button>
+                      <button type="button" class="btn btn-success btn-sm" ng-click="finalassigncheque()">Assign</button>
+                    </div>
+                  </div>
+                    <table st-set-filter="customFilter" st-table="displayedCollection2" st-safe-src="uccdaywise" class="table table-bordered table-striped">
+                        <thead>
+                          <tr class="bg-info text-white">
+                            <th st-sort="AMC" st-skip-natural="true">AMC</th>
+                            <th st-sort="Category" st-skip-natural="true">Category</th>
+                            <th st-sort="SchemeCode" st-skip-natural="true">Code</th>
+                            <th st-sort="SchemeName" st-skip-natural="true">Scheme</th>
+                            <th st-sort="Folio" st-skip-natural="true">Folio</th>
+                            <th st-sort="pnl" st-skip-natural="true">PNL</th>
+                            <th st-sort="values" st-skip-natural="true">Amount &#8377</th>
+                          </tr>
+                          <!-- <tr>
+                              <th class="bg-info text-white" ng-repeat="head in uccheaders" st-sort="{{head}}">
+                                {{head|titlecase}} 
+                              </th>
+                               <th class="bg-info text-white"><i class="now-ui-icons loader_gear spin"></i></th>
+                            </tr> -->
+                          <tr>
+                              <th ng-repeat="head in uccheaders">
+                             <input st-search="{{head}}"  class="input-sm form-ctrl" type="text" value="" ng-value=""/>
+                              </th>
+                              <th></th>   
+                            </tr>
+                        </thead>
+                        <tbody ng-init="total = 0">
+                            <tr ng-repeat="x in displayedCollection2" class="text-center">
+                              <td>{{x.AMC}}</td>
+                              <td>{{x.Category}}</td>
+                              <td>{{x.SchemeCode}}</td>
+                              <td>{{x.SchemeName}}</td>
+                              <td>{{x.Folio}}</td>
+                              <td>{{x.pnl}}</td>
+                              <td><input type="text" class="form-ctrl" ng-model="x.values" ng-change="updateTotal()"></td>
+                              <!-- <td><input type="text" class="form-control" ng-modal="x.values"></td> -->
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                              <td colspan="6" class="text-center">
+                                <div st-pagination="" st-items-by-page="100" st-displayed-pages="5"></div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                      </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="modal fade" id="addnewschememodal" tabindex="-1" role="dialog" aria-labelledby="addnewschememodalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-success text-white text-center">
+                  <h6 class="modal-title" id="addnewschememodal">Add New Scheme</h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+
+                    <div class="row">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4" align="right">
+                      <button type="button" class="btn btn-success btn-sm" data-dismiss="modal" ng-click="addnewschemesforucc(assignchqinfo['assignucc'])">Add</button>
+                    </div>
+                  </div>
+                    <table st-set-filter="customFilter" st-table="displayedCollection3" st-safe-src="uccnewscheme" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                              <th class="bg-info text-white" ng-repeat="head in newschemehead" st-sort="{{head}}">
+                                {{head|titlecase}} 
+                              </th>
+                              <th class="bg-info text-white">Select</th>
+                            </tr>
+                          <tr>
+                              <th ng-repeat="head in newschemehead">
+                             <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+                              </th>
+                              <th></th>   
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(y,x) in displayedCollection3" class="text-center">
+                              <td>{{x.AMC}}</td>
+                              <td>{{x.Category}}</td>
+                              <td>{{x.SchemeCode}}</td>
+                              <td>{{x.SchemeName}}</td>
+                              <td><input id="selectnewscheme" type="checkbox" ng-model="newschemelist.selected[y]" ng-true-value="'{{x.AMC}},{{x.SchemeCode}}'" ng-false-value="null"></td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                              <td colspan="6" class="text-center">
+                                <div st-pagination="" st-items-by-page="100" st-displayed-pages="5"></div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                      </table>
+                </div>
+              </div>
+            </div>
+          </div>

@@ -1,0 +1,115 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mouseclicksys</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false; section4 = false">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#chqueIn">Cheque In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewToday">Today</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#newviewDaywise">Daywise</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#viewResidue">Residue</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <form>
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="now-ui-icons ui-1_zoom-bold"></i>
+            </div>
+          </div>
+        </div>
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" target="_self">
+            <i class="now-ui-icons users_single-02"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="card" ng-init="getResidue();">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-7">
+              <h5 class="title">View Residue</h5>
+            </div>
+            <div class="col-md-5" align="center">
+              <div class="btn-group">
+                  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Options
+                  </button>
+                  <div class="dropdown-menu">
+<!--                     <a class="dropdown-item" href="" target="_self" ng-click="toggleAssignLqd()">Assign Liquid</a>
+                    <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#preassignedlqdlist">Show Pre-Assigned Liquid</a>
+                    <a class="dropdown-item" ng-href="#switchoutLiquid">Show Switch Out</a>
+                    <a class="dropdown-item" ng-href="#redemptionLiquid">Show Redemption</a> -->
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+          <table style="margin-top:30px" st-set-filter="customFilter" st-table="displayedCollection" st-safe-src="residuelist" class="table table-bordered table-striped table-condensed" style="width: 100%"> 
+            <thead>
+            <tr>
+              <th class="bg-info text-white" ng-repeat="head in headers" st-sort="{{head}}" st-skip-natural="true">
+                {{head|titlecase}}
+              </th>
+            </tr>
+      
+            <tr>
+              <th ng-repeat="head in headers">
+                <input st-search="{{head}}"  class="input-sm form-ctrl" type="text" value="" ng-value=""/>
+              </th>
+            </tr>
+            </thead>
+            <tbody style="font-size: 12px;">
+            <tr ng-repeat="(x,rec) in displayedCollection">
+            <td width="2% !important">{{rec['Family']}}</td>
+            <td width="10%">{{rec['UCC']}}</td>
+            <td >{{rec['Category']}}</td>
+            <td>{{rec['SchemeCode']}}</td>
+            <td width="20%">{{rec['SchemeName']}}</td>
+            <td>{{rec['Folio']}}</td>
+            <td class="text-center">{{rec['Amount']}}</td>
+            <td>{{rec['Units']}}</td>
+            <td>{{rec['NAV']}}</td>
+            <td>{{rec['OrderNo']}}</td>
+            <td>{{rec['Date']}}</td>
+            <td class="text-center">{{rec['pnl']}}</td>
+            <td>{{rec['Comments']}}</td>    
+            <td>{{rec['SONO']}}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td colspan="5" class="text-center">
+                  <div st-pagination="" st-items-by-page="100" st-displayed-pages="10"></div>
+              </td>
+            </tr>
+            </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>

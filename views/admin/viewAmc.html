@@ -1,0 +1,363 @@
+<style>
+  .modal-body{
+    min-height: 100px;
+}
+</style>
+
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mouseclicksys</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false">Home</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#viewAmc">AMC</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewClients">Client</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewFamilies">Family</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <form>
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="now-ui-icons ui-1_zoom-bold"></i>
+            </div>
+          </div>
+        </div>
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" target="_self">
+            <i class="now-ui-icons users_single-02"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+
+<div class="card" ng-init="getAmc();">
+  <div class="card-header">
+    <div class="row">
+      <div class="col-md-6">
+          <h5 class="title">AMC List</h5>
+      </div>
+      <div class="col-md-6" align="right">
+        <div class="col-md-6" align="right">
+            <!-- Example single danger button -->
+            <div class="btn-group">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Options
+              </button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#addnewamc" ng-click="getFamilyNames();">Add New AMC</a>
+                <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#uploadAmcExcel">Upload Excel</a>
+                <!-- <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#createFamily">Create Family</a> -->
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+    </div>
+	<div class="card-body">
+
+    <table st-table="displayedCollection" st-safe-src="amcList" class="table table-bordered table-striped">
+    <thead>
+    <tr st-skip-natural="true" class="bg-info text-white text-center">
+      <th st-sort="AMC" st-sort-default="true">AMC</th>
+      <th st-sort="Category">Category</th>
+      <th st-sort="SchemeCode">SchemeCode</th>
+      <th st-sort="SchemeName">SchemeName</th>
+      <th st-sort="NAV">NAV</th>
+      <!-- <th ng-repeat="head in headers">
+        {{head|titlecase}} 
+      </th> -->
+      <th class="bg-info text-white"><i class="now-ui-icons loader_gear spin"></i></th>      
+    </tr>
+
+    <tr>
+      <th><input st-search="AMC" class="input-sm form-ctrl" type="text" /></th>
+      <th><input st-search="Category" class="input-sm form-ctrl" type="text"/></th>
+      <th><input st-search="SchemeCode" class="input-sm form-ctrl" type="text"/></th>
+      <th><input st-search="SchemeName" class="input-sm form-ctrl" type="text"/></th>
+      <th><input st-search="NAV" class="input-sm form-ctrl" type="text"/></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="rec in displayedCollection" class="text-center">
+      <td >{{rec['AMC']}}</td>
+      <td >{{rec['Category']}}</td>
+      <td >{{rec['SchemeCode']}}</td>
+      <td style="width: 40% !important">{{rec['SchemeName']}}</td>
+      <td >{{rec['NAV']}}</td>
+    
+      <td style="width: 15%">
+          <div class="btn-group">
+              <button type="button" class="btn btn-sm btn-danger dropdown-toggle btn-icon no-caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="now-ui-icons loader_gear"></i>
+                </button>
+            <div class="dropdown-menu pull-left">
+              <a class="dropdown-item" href="" target="_self" ng-click="getAmcDetails(rec['_id'])" data-toggle="modal" data-target="#editAmc">Edit</a>
+              <a class="dropdown-item" href="" target="_self" ng-click="deleteAmc(rec['_id'])">Delete</a>
+            </div>
+          </div>
+        <!-- <button class="btn btn-danger btn-sm" ng-click="deleteAmc(rec['_id'])"><span class="fa fa-trash" data-toggle="tooltip" title="DELETE"></span></button> -->
+      </td>
+      </tr>
+    </tbody>
+    </table>
+
+		<!-- <table style="margin-top:30px" st-set-filter="customFilter" st-table="displayedCollection" st-safe-src="amcList"  class="table table-condensed table-bordered table-striped table-responsive" > 
+      <thead>
+      <tr>
+        <th ng-repeat="head in headers" st-sort="{{head}}">
+          {{head|titlecase}} 
+        </th>
+        <th>OPERATION</th>
+      </tr>
+
+      <tr>
+        <th ng-repeat="head in headers">
+       <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+        </th>
+        <th></th>   
+      </tr>
+
+
+      </thead>
+      <tbody>
+      <tr ng-repeat="rec in displayedCollection">
+      <td >{{rec['Scheme_Code']}}</td>
+      <td >{{rec['AMC_Name']}}</td>
+      <td >{{rec['AMC_Category']}}</td>
+      <td width="60%">{{rec['OLD_Name']}}</td>
+      <td >{{rec['NAV']}}</td>
+    
+      <td>
+        <button class="btn btn-success btn-sm" style="align:right;" ng-click="getAmcDetails(rec['_id'])" data-toggle="modal" data-target="#editAmc"><span class="fa fa-pencil"></span></button>
+        <button class="btn btn-danger btn-sm" ng-click="deleteAmc(rec['_id'])"><span class="fa fa-trash" data-toggle="tooltip" title="DELETE"></span></button>
+      </td>
+      </tr>
+      </tbody>
+      <tfoot class="text-center">
+        
+        <tr>
+        <td colspan="{{headers.length+1}}">
+          <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+        </td>
+      </tr>
+      </tfoot>
+
+      </table> -->
+
+	</div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="addnewamc" tabindex="-1" role="dialog" aria-labelledby="addnewamcLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addnewamcLabel">ADD AMC</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+           <form name="modalForm" ng-submit="addNewAMC();">
+          <div class="modal-body">
+              <!-- {{amcList}} -->
+              <!-- <div class="row">
+                <div class="form-group col">
+                  <label for="amcname" class="col col-form-label" ng-click="existingamc = true;newamc=false;">Existing AMC</label>
+                    <div class="col-sm-12" ng-show="existingamc">
+                      <select id="amcname" class="form-control" ng-model="newamc.AMC" ng-options="AMC.AMC for AMC in amcList | orderBy:'AMC'"></select>
+                    </div>
+                </div>
+
+                <div class="form-group col">
+                  <label for="amcname" class="col col-form-label" ng-click="newamc = true;existingamc=false;">New AMC</label>
+                    <div class="col-sm-12" ng-show="newamc">
+                      <input type="text" class="form-control" ng-model="newamc.AMC" placeholder="New AMC Name" required>
+                    </div>
+                </div>
+              </div> -->
+            
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">AMC</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" ng-model="newamc.AMC" placeholder="AMC Name" id="amcname" required>
+                </div>
+            </div>
+
+            <!-- <div class="row">
+                <div class="form-group col">
+                  <label for="catname" class="col col-form-label" ng-click="existingcat = true;newcat=false;">Existing Category</label>
+                    <div class="col-sm-12" ng-show="existingcat">
+                      <select id="catname" class="form-control" ng-model="newamc.Category" ng-options="Category.Category for Category in amcList | orderBy:'Category'"></select>
+                    </div>
+                </div>
+
+                <div class="form-group col">
+                  <label for="catname" class="col col-form-label" ng-click="newcat = true;existingcat=false;">New Category</label>
+                    <div class="col-sm-12" ng-show="newcat">
+                      <input type="text" class="form-control" ng-model="newamc.Category" placeholder="New Category Name" required>
+                    </div>
+                </div>
+              </div> -->
+
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">Category</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" ng-model="newamc.Category" placeholder="AMC Category" required>
+                </div>
+            </div>
+
+            <div class="row">
+              <label class="col-sm-2 col-form-label">Scheme Code</label>
+                <div class="form-group col-sm-10">
+                  <input name="schemecode" type="text" class="form-control" ng-model="newamc.SchemeCode" placeholder=""  required>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-sm-2 col-form-label">Scheme Name</label>
+                  <div class="form-group col-sm-10">
+                    <input name="schemecode" type="text" class="form-control" ng-model="newamc.SchemeName" placeholder=""  required>
+                  </div>
+            </div>
+      
+            <div class="form-group row">
+              <label class="col-sm-2 col-form-label">NAV</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control"  ng-model="newamc.NAV" placeholder="NAV" required>
+                </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+           <input type="submit" class="btn btn-success" id="submit" value="Submit" />
+            <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+          </div>
+        </form>
+        </div>
+       </div>
+    </div>
+  </div>
+
+
+
+<div class="modal fade" id="editAmc" tabindex="-1" role="dialog" aria-labelledby="editAmcModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+  	<div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="editAmcModalLabel">EDIT AMC :: {{amcData.SchemeCode}}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	 <form name="modalForm" ng-submit="saveEditedAmc(amcData._id);">
+		    <div class="modal-body">
+
+		    <div class="row">
+				<label class="col-sm-2 col-form-label">Scheme Code</label>
+			    <div class="form-group col-sm-10">
+			      <input name="schemecode" type="text" class="form-control" ng-model="amcData.SchemeCode" placeholder=""  required>
+			    </div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">AMC NAME</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" ng-model="amcData.AMC" placeholder="AMC Name" id="amcname" ng-value="amcData.AMC" required>
+			    </div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">AMC Category</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control" ng-model="amcData.Category" placeholder="AMC Category" required>
+			    </div>
+			</div>
+
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">NAV</label>
+			    <div class="col-sm-10">
+			      <input type="text" class="form-control"  ng-model="amcData.NAV" placeholder="NAV" required>
+			    </div>
+			</div>
+		     
+		    </div>
+		    <div class="modal-footer">
+		     <input type="submit" class="btn btn-success" id="submit" value="Submit" />
+		      <button class="btn btn-danger" ng-click="cancel()">Cancel</button>
+		    </div>
+		  </form>
+      </div>
+     </div>
+
+  	
+  
+  </div>
+</div>
+
+
+
+
+<div class="modal fade" id="uploadAmcExcel" tabindex="-1" role="dialog" aria-labelledby="uploadAmcExcelLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadAmcExcelLabel">Upload AMC Excel File</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+
+        <div class="text-center">
+          <div class="form-group">
+            <label for="fup" class="btn btn-info btn-file">Browse for File</label>
+          <div class="col-sm-10">
+            <input type="file" file-model="amcExcelFile" class="btn btn-info btn-xs" id="fup" style="display: none;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+          </div>
+        </div>
+        </div>
+
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" ng-click="uploadAmcExcel();">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+</div>
+</div>
+
+

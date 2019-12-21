@@ -1,0 +1,75 @@
+<div class="card" ng-init="">
+        <div class="card-header">
+        
+        <div class="row">
+          <div class="col-md-6" >
+              <h5 class="title">Redemption List</h5>
+          </div>
+          <div class="col-md-6" align="center">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Options
+                </button>
+                <div class="dropdown-menu">
+                  <!-- <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#assignslip" ng-click="getsliplesscheques()">Assign Slip Number</a> -->
+                  <!-- <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#uploadChequeExcel">Export Excel</a> -->
+                  <!-- <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#createFamily">Create Family</a> -->
+                </div>
+          </div>
+        </div>
+        </div>
+      
+          <div class="card-body">
+        <table style="margin-top:30px" st-table="displayedCollection" st-safe-src="dishonlist" class="table table-bordered table-striped table-responsive table-condensed" > 
+            <thead>
+            <tr class="bg-info text-white text-center">
+                <th st-sort="Family">Family</th>
+                <th st-sort="UCC">UCC</th>
+                <th st-sort="Bank">Bank</th>
+                <th st-sort="AccountNo">Acc No</th>
+                <th st-sort="ChqNo">Cheque</th>
+                <th st-sort="Amount">Amount</th>
+                <th st-sort="DepositedDate">DepositedDate</th>
+                <th st-sort="Slip" st-sort-default="reverse" st-skip-natural="true">Slip</th>
+                <th>Comments</th>
+              <!-- <th class="bg-info text-white" ng-repeat="head in headers" st-sort="{{head}}">
+                {{head|titlecase}}
+              </th> -->
+            </tr>
+      
+            <tr>
+              <th ng-repeat="head in headers">
+             <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+              </th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody style="font-size: 12px;">
+            <tr class="text-center" ng-repeat="rec in displayedCollection">
+                <td >{{rec['Family']}}</td>
+                <td >{{rec['UCC']}}</td>
+                <td >{{rec['Bank']}}</td>
+                <td >{{rec['AccountNo']}}</td>
+                <td >{{rec['ChqNo']}}</td>
+                <td >{{rec['Amount']}}</td>
+                <td >{{rec['DepositedDate']}}</td>
+                <td >{{rec['Slip']}}</td>
+                <td >{{rec['Comments']}}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+              
+              <tr>
+                    <td colspan="5" class="text-center">
+                        <div st-pagination="" st-items-by-page="100" st-displayed-pages="10"></div>
+                    </td>
+              <!-- <td colspan="{{headers.length}}" class="text-center">
+                <div st-pagination="" st-items-by-page="itemsByPage"></div>
+              </td> -->
+            </tr>
+            </tfoot>
+      
+            </table>
+      
+          </div>
+        </div>
+      </div>

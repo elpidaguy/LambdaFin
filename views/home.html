@@ -1,0 +1,207 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">Mouseclicksys</a>
+		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-bar navbar-kebab"></span>
+			<span class="navbar-toggler-bar navbar-kebab"></span>
+			<span class="navbar-toggler-bar navbar-kebab"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarNavDropdown">
+			<ul class="navbar-nav">
+				<li class="nav-item active">
+					<a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false; section4 = false">Home</a>
+				</li>
+			</ul>
+		</div>
+
+		<div class="collapse navbar-collapse justify-content-end" id="navigation">
+			<form>
+				<div class="input-group no-border">
+					<input type="text" value="" class="form-control" placeholder="Search...">
+					<div class="input-group-append">
+						<div class="input-group-text">
+							<i class="now-ui-icons ui-1_zoom-bold"></i>
+						</div>
+					</div>
+				</div>
+			</form>
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<a class="nav-link" href="/" target="_self">
+						<i class="now-ui-icons users_single-02"></i> Logout
+					</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div id="section1" align="center" class="container" ng-show="mainsection" ng-init="getDep()">
+	<div class="card">
+<!-- 		{{depList}} {{department}} -->
+		<div class="col-md-4">
+			<label class="title">Select Department : </label>
+			<select class="form-ctrl" ng-model="department" ng-change="changeDepartment()">
+				<option ng-repeat="(key, value) in depList" value="{{value.dep_id}}">{{value.dep_id}} : {{value.dep_name}}</option>
+			</select>
+		</div> <br>
+	</div>
+	<div class="row">
+		<div class="col-md-4">
+			<div ng-click="mainsection = false;section2 = true">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title text-primary">Master Menu</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div ng-click="mainsection = false;section3 = true">
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title text-primary">Office Menu</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	<!-- </div>
+	<div class="row"> -->
+		<div class="col-md-4">
+			<div ng-click="mainsection = false;section4 = true">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title text-primary">Reports</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="section2" class="container" ng-show="section2">
+	<div>
+		<button class="btn btn-info" ng-click="mainsection = true;section2 = false; section3 = false">Back</button>
+	</div>
+	<div class="row" align="center">
+		<div class="col-md-3">
+			<a href="#viewAmc">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">AMC</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<div class="col-md-3">
+			<a href="#viewClients">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">Client List</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<div class="col-md-3">
+			<a href="#viewFamilies" target="_self">
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">Family</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div id="section3" class="container" ng-show="section3">
+	<div>
+		<button class="btn btn-info" ng-click="mainsection = true;section2 = false; section3 = false">Back</button>
+	</div>
+	<div class="row" align="center">
+		<div class="col-md-3">
+			<a href="#chqueIn">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">Cheque In</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<div class="col-md-3">
+			<a href="#viewToday">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">Today</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+
+		<div class="col-md-3">
+			<a href="#newviewDaywise">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">Daywise</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+	</div>
+</div>
+
+<div id="section4" class="container" ng-show="section4">
+	<div>
+		<button class="btn btn-info" ng-click="mainsection = true;section2 = false; section3 = false; section4 = false">Back</button>
+	</div>
+	<div class="row" align="center">
+		<div class="col-md-3">
+			<a href="#valuationReport">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">Valuation Report</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+		<div class="col-md-3">
+			<a href="#aumReport">
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">AUM Report</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div>
+		<!-- <div class="col-md-3">
+			<a href="#ltpReport">	
+				<div class="card">
+					<div class="card-header">
+						<h5 class="title">LTP Report</h5>
+						<p class="category">Click To View ></p>
+					</div>
+				</div>
+			</a>
+		</div> -->
+	</div>
+</div>
+
+	
+</div>
+</div>
+</div>

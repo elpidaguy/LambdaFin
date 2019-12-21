@@ -1,0 +1,69 @@
+
+/*.table th {
+    padding: 10px !important;
+}*/
+.table td  {
+    font-family: Calibri, sans-serif;
+    font-size: 12px;
+    padding: 0px !important;
+}
+table > td {
+    font-family: Calibri, sans-serif;
+    font-size: 12px;
+   padding:0 !important;
+   margin:0 !important;
+}
+
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th
+{
+    padding: 5px 5px !important;
+    border: 1px solid #dee2e6 !important;
+    font-weight: bold !important;
+    font-size: 12px !important;
+}
+
+table {
+    border-collapse: collapse !important;
+}
+
+.mycontainer {
+    width : 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+.modal-lg {
+    max-width: 90% !important;
+  }
+  
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    min-height: 500px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
+
+.form-ctrl
+{
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 6px;
+    font-size: 12px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}

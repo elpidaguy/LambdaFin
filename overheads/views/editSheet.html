@@ -1,0 +1,166 @@
+<div class="container">
+	<div class="card">
+		<div class="card-header">
+			Overheads 
+		</div>
+		<div class="card-body p-4" ng-init="getAllUCC();">
+			<div class="row">
+                <div class="form-group col">
+                    <label for="ucc" class="col col-form-label">Select UCC</label>
+                    <div class="col-sm-12">
+                        <select id="ucc" class="form-control" ng-model="ucc" ng-options="ucc['UCC'] for ucc in uccList | orderBy:'UCC'" ng-change="getSheetByUcc(ucc);"></select>
+                    </div>
+                </div>
+
+                <div class="form-group col">
+                    <label for="sheet" class="col col-form-label">Select Sheet</label>
+                    <div class="col-sm-12">
+                        <select id="sheet" class="form-control" ng-model="selectedSheet" ng-options="sheet.sheetName for sheet in sheetList | orderBy:'sheetName'" ng-change="selectSheet(selectedSheet);"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" ng-show="sheetDataDiv">
+                <div class="row text-center" id="departments">
+                	<div class="col-md-4 text-center">
+                	</div>
+                	<div class="col-md-4 text-center">
+            			<h3>{{sheetToBeEdited.sheetName}}</h3>
+                	</div>
+                	<div class="col-md-4 text-center">
+                	<button class="btn btn-success" data-toggle="modal" data-target="#addDeptModal"> <i class="fa fa-plus"></i>Dept</button>
+                	</div>
+	            	<div class="col-md-12" ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] | limitTo : sheetToBeEdited.NoOfDepartments">
+	                    <div class="card">
+	                        <div class="card-header bg-warning p-3 text-white">
+	                        	<div class="row">
+                                	<span class="pull-center">Department :: {{$index+1}}</span>
+                            	</div>
+	                            <div class="row">
+	                            	
+	                                <div class="form-group col">
+	                                    <label class="col col-form-label">Department Name</label>
+	                                    <div class="col-sm-12">
+	                                        <input type="text" class="form-control" ng-model="sheetToBeEdited.department[$index].departName" required>
+	                                    </div>
+	                                </div>
+<!-- 
+	                                <div class="form-group col">
+	                                	<label class="col col-form-label">Department Name</label>
+	                                    <div class="col-sm-12">
+	                                    <button class="btn btn-success" ng-click="addColumnEditSheet();">Add</button>
+	                                    </div>
+	                                </div> -->
+	                            </div>
+	                        </div>
+	                        <div class="card-body">
+	                            Columns {{sheetToBeEdited.department[$index].colCount}}
+	                            <div class="row">
+	                                <div class="col"  ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] | limitTo : sheetToBeEdited.department[$index].colCount" >
+
+	                                	<i class="fa fa-pencil" aria-hidden="true"></i>
+	                                    <input type="checkbox" ng-model="sheetToBeEdited.department[$parent.$index].col[$index].isEditable" ng-init="sheetToBeEdited.department[$parent.$index].col[$index].isEditable">
+
+	                                    <i class="fa fa-calculator" aria-hidden="true"></i>
+	                                    <input type="checkbox" ng-model="sheetToBeEdited.department[$parent.$index].col[$index].isFormula" ng-init="sheetToBeEdited.department[$parent.$index].col[$index].isFormula">
+
+	                                    <i class="fa fa-share" aria-hidden="true"></i>
+	                                    <input type="checkbox" ng-model="sheetToBeEdited.department[$parent.$index].col[$index].isCarryForward" ng-init="sheetToBeEdited.department[$parent.$index].col[$index].isCarryForward" disabled="true">
+
+	                                    <input type="text" class="form-control" ng-model="sheetToBeEdited.department[$parent.$index].col[$index].colName" required>
+	                                    <input ng-show="sheetToBeEdited.department[$parent.$index].col[$index].isFormula" ng-init="sheetToBeEdited.department[$parent.$index].col[$index].formula" type="text" class="form-control mt-2" ng-model="sheetToBeEdited.department[$parent.$index].col[$index].formula" placeholder="formula">
+	                                </div>
+	                            </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <div class="col-md-12">
+	            <button class="btn btn-success" ng-click="saveEditedSheet();">Save</button>
+                	</div>
+	            </div>
+            </div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="addDeptModal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+
+				<div class="modal-header">
+					<h4 class="modal-title">Add Department</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+				</div>
+
+				<div class="modal-body text-center">
+					<div class="card">
+                        <div class="card-header bg-warning p-3 text-white">
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label class="col col-form-label">Department Name</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="newDept.departName" placeholder="Name Of Department" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col" ng-init="newDept.colCount=0">
+                                    <label class="col col-form-label">Number Of Columns</label>
+                                    <div class="col-sm-12">
+                                       <select class="form-control" ng-model="newDept.colCount">
+                                        <option>1</option>
+			                            <option>2</option>
+			                            <option>3</option>
+			                            <option>4</option>
+			                            <option>5</option>
+			                            <option>6</option>
+			                            <option>7</option>
+			                            <option>8</option>
+			                            <option>9</option>
+			                            <option>10</option>
+			                            <option>11</option>
+			                            <option>12</option>
+			                            <option>13</option>
+			                            <option>14</option>
+			                            <option>15</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            Columns
+                            <div class="row">
+                                <div class="col"  ng-repeat="i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] | limitTo : newDept.colCount" >
+
+                                	<i class="fa fa-pencil" aria-hidden="true"></i>
+                                    <input type="checkbox" ng-model="newDept.col[$index].isEditable" ng-init="newDept.col[$index].isEditable=false" ng-false-value="false">
+
+                                    <i class="fa fa-calculator" aria-hidden="true"></i>
+                                    <input type="checkbox" ng-model="newDept.col[$index].isFormula" ng-init="newDept.col[$index].isFormula=false" ng-false-value="false">
+
+                                    <i class="fa fa-share" aria-hidden="true"></i>
+                                    <input type="checkbox" ng-model="newDept.col[$index].isCarryForward" ng-init="newDept.col[$index].isCarryForward=false" ng-false-value="false">
+
+                                    <input type="text" class="form-control" ng-model="newDept.col[$index].colName" placeholder="Col:{{$index+1}}" required>
+                                    <input ng-show="newDept.col[$index].isFormula" ng-init="newDept.col[$index].formula=''" type="text" class="form-control mt-2" ng-model="newDept.col[$index].formula" placeholder="formula">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+					<button type="button" class="btn btn-primary" ng-click="addDepartmentEditSheet();">ADD</button>
+                        	
+                        </div>
+                    </div>
+				</div>
+
+				<!-- <div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				</div>
+ -->
+			</div>
+		</div>
+	</div>
+
+</div>	
+</div>
+</div>
+</div>

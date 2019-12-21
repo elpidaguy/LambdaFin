@@ -1,0 +1,156 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mouseclicksys</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false; section4 = false">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#chqueIn">Cheque In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewToday">Today</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#newviewDaywise">Daywise</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewResidue">Residue</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <form>
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="now-ui-icons ui-1_zoom-bold"></i>
+            </div>
+          </div>
+        </div>
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" target="_self">
+            <i class="now-ui-icons users_single-02"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="card" ng-init="getallswitchout()">
+        <div class="card-header">
+        
+        <div class="row">
+          <div class="col-md-6" >
+              <h5 class="title">Switch Done List ({{department | titlecase}})</h5>
+          </div>
+          <div class="col-md-6" align="center">
+              <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Options
+                </button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#uploadswitchoutexcel">Import Excel</a>
+                  <a class="dropdown-item" href="" target="_self" ng-click="exportswitchdone()">Export Excel</a>
+                </div>
+          </div>
+        </div>
+        </div>
+      
+          <div class="card-body">
+        <table style="margin-top:30px;" st-table="displayedCollection" st-safe-src="solist" class="table table-bordered table-striped table-responsive" > 
+            <thead>
+            <tr class="bg-info text-white text-center">
+                
+              <th class="bg-info text-white" ng-repeat="head in headersso" st-sort="{{head}}">
+                {{head}}
+              </th>
+            </tr>
+      
+            <tr>
+              <th ng-repeat="head in headersso">
+                <input st-search="{{head}}"  class="input-sm form-ctrl" type="text" value="" ng-value=""/>
+              </th>
+            </tr>
+            </thead>
+            <tbody style="font-size: 12px;">
+            <tr ng-repeat="rec in displayedCollection track by $index">
+                <td width="40px">{{rec['Family']}}</td>
+                <td width="40px">{{rec['UCC']}}</td>
+                <td width="120px">{{rec['Category']}}</td>
+                <td width="120px">{{rec['SchemeCode']}}</td>
+                <td width="180px">{{rec['SchemeName']}}</td>
+                <td width="40px">{{rec['Folio']}}</td>
+                <td width="40px">{{rec['SIAmount']}}</td>
+                <!-- <td>{{rec['Amount']}}</td> -->
+                <td width="40px">{{rec['Units']}}</td>
+                <td width="40px">{{rec['NAV']}}</td>
+                <td width="40px">{{rec['OrderNo']}}</td>
+                <td width="80px">{{rec['Date']}}</td>
+                <td width="120px">{{rec['Comments']}}</td>
+                <td width="80px">{{rec['SwitchDate']}}</td>
+                <td width="120px">{{rec['SICategory']}}</td>
+                <td width="120px">{{rec['SISchemeCode']}}</td>
+                <td width="180px">{{rec['SISchemeName']}}</td> 
+                <td width="40px">{{rec['SIFolio']}}</td>
+                <td width="40px">{{rec['SONO']}}</td>
+                <td width="40px">{{rec['SINO']}}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+              
+              <tr>
+                    <td colspan="5" class="text-center">
+                        <div st-pagination="" st-items-by-page="100" st-displayed-pages="10"></div>
+                    </td>
+              <!-- <td colspan="{{headers.length}}" class="text-center">
+                <div st-pagination="" st-items-by-page="itemsByPage"></div>
+              </td> -->
+            </tr>
+            </tfoot>
+      
+            </table>
+      
+          </div>
+        </div>
+
+<div class="modal fade" id="uploadswitchoutexcel" tabindex="-1" role="dialog" aria-labelledby="uploadswitchoutexcelLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-success text-white text-center">
+          <h5 class="modal-title" id="uploadswitchoutexcelLabel">Upload Switch Out Excel File</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+  
+          <div class="text-center">
+            <div class="form-group">
+              <label for="fup" class="btn btn-info btn-file">Browse for File</label>
+            <div class="col-sm-10">
+              <input type="file" file-model="switchoutexcelfile" class="btn btn-info btn-xs" id="fup" style="display: none;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+            </div>
+          </div>
+          </div>
+  
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-round" ng-click="uploadswitchoutexcel();">Upload</button>
+        </div>
+      </div>
+    </div>
+  </div>        

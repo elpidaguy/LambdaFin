@@ -1,0 +1,121 @@
+<div class="container">
+	<div class="card">
+<form name="modalForm" ng-submit="saveSheet();">
+		<div class="card-header">
+			Overheads 
+		</div>
+		<div class="card-body" ng-init="getAllUCC();depCount=0;colCount=0">
+			<div class="row">
+                <div class="form-group col">
+                    <label for="ucc" class="col col-form-label">Select UCC</label>
+                    <div class="col-sm-12">
+                        <select id="ucc" class="form-control" ng-model="sheet.ucc" ng-options="ucc['UCC'] for ucc in uccList | orderBy:'UCC'"></select>
+                    </div>
+                </div>
+
+                <div class="form-group col">
+                    <label for="sheetname" class="col col-form-label">Sheet Name</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" ng-model="sheet.sheetName" placeholder="Name Of Sheet" required>
+                    </div>
+                </div>
+
+                <div class="form-group col">
+                    <label for="sheetname" class="col col-form-label">Number Of Departments</label>
+                    <div class="col-sm-12">
+                        <select class="form-control" ng-model="sheet.NoOfDepartments" ng-value="sheet.NoOfDepartments" ng-change="sheet.department=[];depCount=sheet.NoOfDepartments;">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                            <option>6</option>
+                            <option>7</option>
+                            <option>8</option>
+                            <option>9</option>
+                            <option>10</option>
+                            <option>11</option>
+                            <option>12</option>
+                            <option>13</option>
+                            <option>14</option>
+                            <option>15</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row text-center" id="departments" ng-show="depCount>0">
+            	<div class="col-md-12" ng-repeat="depCount in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] | limitTo : depCount">
+                    <div class="card">
+                        <div class="card-header bg-warning p-3 text-white">
+                            <div class="row">
+                                <span class="pull-center">Department :: {{$index+1}}</span>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col">
+                                    <label class="col col-form-label">Department Name</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" class="form-control" ng-model="sheet.department[$index].departName" placeholder="Name Of Department" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col">
+                                    <label class="col col-form-label">Number Of Columns</label>
+                                    <div class="col-sm-12">
+                                       <select class="form-control" ng-model="sheet.department[$index].colCount" ng-value="sheet.department[$index].colCount" ng-change="sheet.department[$index].col=[];colCount=sheet.department[$index].colCount;">
+                                        <option>1</option>
+			                            <option>2</option>
+			                            <option>3</option>
+			                            <option>4</option>
+			                            <option>5</option>
+			                            <option>6</option>
+			                            <option>7</option>
+			                            <option>8</option>
+			                            <option>9</option>
+			                            <option>10</option>
+			                            <option>11</option>
+			                            <option>12</option>
+			                            <option>13</option>
+			                            <option>14</option>
+			                            <option>15</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            Columns
+                            <div class="row">
+                                <div class="col"  ng-repeat="colCount in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15] | limitTo : colCount" >
+                                    
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    <input type="checkbox" ng-model="sheet.department[$parent.$index].col[$index].isEditable" ng-init="sheet.department[$parent.$index].col[$index].isEditable=false" ng-false-value="false">
+                                    
+                                    <i class="fa fa-calculator" aria-hidden="true"></i>
+                                    <input type="checkbox" ng-model="sheet.department[$parent.$index].col[$index].isFormula" ng-init="sheet.department[$parent.$index].col[$index].isFormula=false" ng-false-value="false">
+                                    
+                                    <i class="fa fa-share" aria-hidden="true"></i>
+                                    <input type="checkbox" ng-model="sheet.department[$parent.$index].col[$index].isCarryForward" ng-init="sheet.department[$parent.$index].col[$index].isCarryForward=false" ng-false-value="false">
+
+                                    <input type="text" class="form-control" ng-model="sheet.department[$parent.$index].col[$index].colName" placeholder="Col:{{$index+1}}" required>
+                                    <input ng-show="sheet.department[$parent.$index].col[$index].isFormula" ng-init="sheet.department[$parent.$index].col[$index].formula=''" type="text" class="form-control mt-2" ng-model="sheet.department[$parent.$index].col[$index].formula" placeholder="formula">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+        <div class="card-footer">
+           <input type="submit" class="btn btn-success" id="submit" value="Submit" />
+            <!-- <button class="btn btn-success" ng-click="saveSheet();">Submit</button> -->
+            <!-- {{sheet}} -->
+        </div>
+</form>
+	</div>
+
+</div>	
+</div>
+</div>
+</div>

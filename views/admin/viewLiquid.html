@@ -1,0 +1,400 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mouseclicksys</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false; section4 = false">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#chqueIn">Cheque In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewToday">Today</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#newviewDaywise">Daywise</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <form>
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="now-ui-icons ui-1_zoom-bold"></i>
+            </div>
+          </div>
+        </div>
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" target="_self">
+            <i class="now-ui-icons users_single-02"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="card" ng-init="getDaywiseLiquid();">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-7">
+              <h5 class="title">Daywise Liquid ({{department | titlecase}})</h5>
+            </div>
+            <div class="col-md-5" align="center">
+                <button type="button" class="btn btn-success" ng-show="showAssignlqd" ng-click="toggleAssignLqd();preassignLqd()">Confirm Assign</button>
+                <button type="button" class="btn btn-danger" ng-show="showAssignlqd" ng-click="toggleAssignLqd();">Cancel</button>
+      
+              <div class="btn-group" ng-show="!showAssignlqd">
+                  <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Options
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="" target="_self" ng-click="toggleAssignLqd()">Assign Liquid</a>
+                    <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#preassignedlqdlist">Show Pre-Assigned Liquid</a>
+                    <a class="dropdown-item" ng-href="#switchoutLiquid">Show Switch Done</a>
+                    <a class="dropdown-item" ng-href="#redemptionLiquid">Show Redemption</a>
+                  </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+              <table style="margin-top:30px" st-set-filter="customFilter" st-table="displayedCollection" st-safe-src="daywiseliquidlist" class="table table-bordered table-striped table-condensed" style="width: 100%"> 
+            <thead>
+            <tr>
+              <th class="bg-info text-white" ng-show="showAssignlqd">Select</th>
+              <th class="bg-info text-white" ng-repeat="head in headers" st-sort="{{head}}" st-skip-natural="true">
+                {{head|titlecase}}
+              </th>
+              <!-- <th class="bg-info text-white"><i class="now-ui-icons loader_gear spin"></i></th> -->
+            </tr>
+      
+            <tr>
+              <th ng-show="showAssignlqd"></th>
+              <th ng-repeat="head in headers">
+                <input st-search="{{head}}"  class="input-sm form-ctrl" type="text" value="" ng-value=""/>
+              </th> 
+            </tr>
+            </thead>
+            <tbody style="font-size: 12px;">
+            <tr ng-repeat="(x,rec) in displayedCollection | filter: {preaslqd: 'false'}">
+                <td ng-show="showAssignlqd">
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            <input id="assignlqd" class="form-check-input" type="checkbox" ng-model="liquidlist.selected[x]" ng-true-value="'{{rec['OrderNo']}}'" ng-false-value="null">
+                            <span class="form-check-sign">
+                                <span class="check"></span>
+                            </span>
+                        </label>
+                    </div>
+                  </td>
+            <td width="2% !important">{{rec['Family']}}</td>
+            <td width="10%">{{rec['UCC']}}</td>
+            <td >{{rec['Category']}}</td>
+            <td>{{rec['SchemeCode']}}</td>
+            <td width="20%">{{rec['SchemeName']}}</td>
+            <td>{{rec['Folio']}}</td>
+            <td class="text-center">{{rec['Amount']}}</td>
+            <td>{{rec['Units']}}</td>
+            <td>{{rec['NAV']}}</td>
+            <td>{{rec['OrderNo']}}</td>
+            <td>{{rec['Date']}}</td>
+            <td class="text-center">{{rec['pnl']}}</td>
+            <td>{{rec['Comments']}}</td>    
+            <!-- <td>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-round btn-danger dropdown-toggle btn-simple btn-icon no-caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="now-ui-icons loader_gear"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                      <a class="dropdown-item" href="#">Edit</a>
+                      <a class="dropdown-item" href="#">Delete</a>
+                    </div>
+                  </div>
+                <button class="btn btn-success btn-fab btn-icon btn-round" style="align:right;" ng-click="getAmcDetails(rec['_id'])" data-toggle="modal" data-target="#editAmc"><i class="fa fa-pencil"></i></button>
+                <button class="btn btn-danger btn-fab btn-icon btn-round" onclick="return confirm('Do You Want To Delete'+rec['Scheme_Code'])" ng-click="deleteAmc(rec['_id'])"><span class="fa fa-trash" data-toggle="tooltip" title="DELETE"></span></button>
+              </td> -->
+            </tr>
+            </tbody>
+            <tfoot>
+              
+              <tr>
+                  <td colspan="5" class="text-center">
+                      <div st-pagination="" st-items-by-page="100" st-displayed-pages="10"></div>
+                    </td>
+            </tr>
+            </tfoot>
+      
+            </table>
+      
+          </div>
+        </div>
+      </div>
+      
+      
+      
+      <div class="modal fade" id="preassignedlqdlist" tabindex="-1" role="dialog" aria-labelledby="preassignedlqdlistLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header bg-info text-white text-center">
+                <h5 class="modal-title" id="preassignedlistLabel">Pre-Assigned Liquid</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body text-center">
+                  <table st-set-filter="customFilter" st-table="displayedCollection" st-safe-src="daywiseliquidlist" class="table table-bordered table-striped">
+                      <thead>
+                        <!-- <tr>
+                          <th class="bg-info" ng-show="showAssign"></th>
+                          <th class="bg-info text-white" ng-repeat="head in headers">
+                            {{head|titlecase}} 
+                          </th>
+                          <th class="bg-info text-white"><i class="now-ui-icons loader_gear spin"></i></th>
+                        </tr> -->
+      
+                        <tr>
+                            <th class="bg-info text-white" ng-repeat="head in headers" st-sort="{{head}}">
+                              {{head|titlecase}} 
+                            </th>
+                            <th class="bg-info text-white"><i class="now-ui-icons loader_gear"></i></th>
+                          </tr>
+                        <tr>
+                            <th ng-repeat="head in headers">
+                           <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+                            </th>
+                          </tr>
+      
+                      </thead>
+                      <tbody>
+        
+                          <tr ng-repeat="(x,rec) in displayedCollection | filter: {preaslqd: 'true'}" class="text-center">
+                              <!-- <td>Assign</td> -->
+                              <td >{{rec['Family']}}</td>
+                              <td >{{rec['UCC']}}</td>
+                              <td >{{rec['Category']}}</td>
+                              <td >{{rec['SchemeCode']}}</td>
+                              <td >{{rec['SchemeName']}}</td>
+                              <td >{{rec['Folio']}}</td>
+                              <td >{{rec['Amount']}}</td>
+                              <td >{{rec['Units']}}</td>
+                              <td >{{rec['NAV']}}</td>
+                              <td >{{rec['OrderNo']}}</td>
+                              <td >{{rec['Date']}}</td>
+                              <td >{{rec['pnl']}}</td>
+                              <td >{{rec['Comments']}}</td>
+                            
+                              <td>
+                                <!-- Example single danger button -->
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-danger dropdown-toggle btn-icon no-caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="now-ui-icons loader_gear"></i>
+                                      </button>
+                                    <!-- <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
+                                    </button> -->
+                                    <div class="dropdown-menu">
+                                      <button class="dropdown-item" data-toggle="modal" data-target="#assignliquidmodal" data-dismiss="modal" ng-click="getuccdatafromdaywiseamc(rec['UCC'],rec['AMC']);setliquidamount(rec['Amount']);assignlqdinfo.assignucc = rec['UCC']; assignlqdinfo.assignamc=rec['AMC']; assignlqdinfo.assignfolio=rec['Folio']; assignlqdinfo.assignorderno=rec['OrderNo']">Assign this Liquid</button>
+                                      <button class="dropdown-item" data-toggle="modal" data-target="#assignpartialamtmodal" data-dismiss="modal" ng-click="getuccdatafromdaywiseamc(rec['UCC'],rec['AMC']);assignlqdinfo.assignucc = rec['UCC']; assignlqdinfo.assignamc=rec['AMC']; assignlqdinfo.assignfolio=rec['Folio']; assignlqdinfo.assignorderno=rec['OrderNo'];assignlqdinfo.assignpartamt = rec['Amount']">Partial Assign this Liquid</button>
+                                      <button class="dropdown-item">Redemption</button>
+                                      <button class="dropdown-item">Partial Redemption</button>
+                                      <button class="dropdown-item" ng-click="preassignlqdremove(rec['OrderNo'])">Unassign this Liquid</button>
+                                    </div>
+                                  </div>
+                                <!-- <button class="btn btn-success btn-fab btn-icon btn-round" style="align:right;" ng-click="getAmcDetails(rec['_id'])" data-toggle="modal" data-target="#editAmc"><i class="fa fa-pencil"></i></button>
+                                <button class="btn btn-danger btn-fab btn-icon btn-round" onclick="return confirm('Do You Want To Delete'+rec['Scheme_Code'])" ng-click="deleteAmc(rec['_id'])"><span class="fa fa-trash" data-toggle="tooltip" title="DELETE"></span></button> -->
+                              </td>
+                            </tr>
+                      </tbody>
+      <!-- 
+                      <tfoot>
+                        <tr>
+                          <td colspan="5" class="text-center">
+                            <div st-pagination="" st-displayed-pages="5"></div>
+                          </td>
+                        </tr>
+                      </tfoot> -->
+                    </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      
+      <div class="modal fade" id="assignpartialamtmodal" tabindex="-1" role="dialog" aria-labelledby="assignpartialamtmodalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white text-center">
+                <h6 class="modal-title" id="assignpartialamtmodalLabel">Assign Partial Amount </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body text-center" ng-init="partamt = 0">
+                <div>Original Liquid Amount - {{assignlqdinfo['assignpartamt']}}</div>
+                <div>Partial Assignment Amount - {{partamt}}</div>
+                <div>
+                  <input type="text" class="input-sm form-control" ng-model="partamt" ng-change="updateTotalpartlqd()">
+      
+                  <button class="btn btn-danger" type="btn" data-toggle="modal" data-target="#assignliquidmodal" data-dismiss="modal" ng-click="setliquidamount(partamt)">Set</button>
+                </div>
+              </div>
+            </div>
+          </div> 
+        </div> 
+      
+      
+      
+      <div class="modal fade" id="assignliquidmodal" tabindex="-1" role="dialog" aria-labelledby="assignliquidmodalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header bg-success text-white text-center">
+                <h6 class="modal-title" id="assignliquidmodal">Assign Liquid :: AMC - <span class="title text-white">{{assignlqdinfo['assignamc']}} </span> | UCC - <span class="title text-white">{{assignlqdinfo['assignucc']}} </span> | Folio - <span class="title text-white">{{assignlqdinfo['assignfolio']}}</span> | OrderNo - <span class="title text-white">{{assignlqdinfo['assignorderno']}}</span></h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body text-center">
+      
+                  <div class="row">
+                  <!-- <div class="col-md-4">
+                    <div class="card-body bg-info">
+                        UCC : <span class="title text-white">{{assignchqinfo['assignucc']}} </span> :: Family : <span class="title text-white">{{assignchqinfo['assignfamily']}}</span> :: Cheque No : <span class="title text-white">{{assignchqinfo['assignchqno']}}</span>
+                    </div>
+                  </div> -->
+      
+                  <div class="col-md-3">
+                      <span class="alert alert-info title">Amount : &#8377 {{total}} </span> 
+                  </div>
+      
+                  <div class="col-md-3">
+                      <!-- <div class="alert alert-info">
+                          Total / Cheque : <span class="title text-white"> &#8377 {{total}} / &#8377 {{chequeamount}}</span>
+                      </div> -->
+                    <span class="alert alert-info title"> Liquid : &#8377 {{liquidamount}}</span> 
+                    <!-- <div class=""></div> -->
+                  </div>
+                  <div class="col-md-2"></div>
+                  <div class="col-md-4" align="right">
+                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#addnewschememodal" ng-click="getuccamcwisenewschemes(assignlqdinfo['assignucc'],assignlqdinfo['assignamc'])">Add New Scheme</button>
+                    <button type="button" class="btn btn-success btn-sm" ng-click="finalassignliquid()">Assign</button>
+                  </div>
+                </div>
+                  <table st-set-filter="customFilter" st-table="displayedCollection2" st-safe-src="uccdaywiseamc" class="table table-bordered table-striped">
+                      <thead>
+                        <!-- <tr class="bg-info text-white">
+                          <th>Category</th>
+                          <th>Code</th>
+                          <th>Scheme</th>
+                          <th>Folio</th>
+                          <th>PNL</th>
+                          <th>Amount &#8377</th>
+                        </tr> -->
+                        <tr>
+                            <th class="bg-info text-white" ng-repeat="head in uccheadersamc" st-sort="{{head}}">
+                              {{head|titlecase}} 
+                            </th>
+                            <!-- <th class="bg-info text-white"><i class="now-ui-icons loader_gear spin"></i></th> -->
+                          </tr>
+                        <tr>
+                            <th ng-repeat="head in uccheadersamc">
+                           <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+                            </th>
+                            <th></th>   
+                          </tr>
+                      </thead>
+                      <tbody ng-init="total = 0">
+                          <tr ng-repeat="x in displayedCollection2" class="text-center">
+                            <td>{{x.Category}}</td>
+                            <td>{{x.SchemeCode}}</td>
+                            <td>{{x.SchemeName}}</td>
+                            <td>{{x.pnl}}</td>
+                            <td><input type="text" class="form-control" ng-model="x.values" ng-change="updateTotallqd()"></td>
+                            <!-- <td><input type="text" class="form-control" ng-modal="x.values"></td> -->
+                          </tr>
+                      </tbody>
+      
+                      <tfoot>
+                          <tr>
+                            <td colspan="6" class="text-center">
+                              <div st-pagination="" st-items-by-page="100" st-displayed-pages="5"></div>
+                            </td>
+                          </tr>
+                        </tfoot>
+                    </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+      
+      
+        <div class="modal fade" id="addnewschememodal" tabindex="-1" role="dialog" aria-labelledby="addnewschememodalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header bg-success text-white text-center">
+                  <h6 class="modal-title" id="addnewschememodal">Add New Scheme</h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body text-center">
+      
+                    <div class="row">
+                    <div class="col-md-8"></div>
+                    <div class="col-md-4" align="right">
+                      <button type="button" class="btn btn-success btn-sm" data-dismiss="modal" ng-click="addnewschemesforuccamc(assignlqdinfo['assignucc'],assignlqdinfo['assignamc'])">Add</button>
+                    </div>
+                  </div>
+                    <table st-set-filter="customFilter" st-table="displayedCollection3" st-safe-src="uccamcnewscheme" class="table table-bordered table-striped">
+                        <thead>
+                          <tr>
+                              <th class="bg-info text-white" ng-repeat="head in newschemehead" st-sort="{{head}}">
+                                {{head|titlecase}} 
+                              </th>
+                              <th class="bg-info text-white">Select</th>
+                            </tr>
+                          <tr>
+                              <th ng-repeat="head in newschemehead">
+                             <input st-search="{{head}}"  class="input-sm form-control" type="text" value="" ng-value=""/>
+                              </th>
+                              <th></th>   
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="(y,x) in displayedCollection3" class="text-center">
+                              <td>{{x.Category}}</td>
+                              <td>{{x.SchemeCode}}</td>
+                              <td>{{x.SchemeName}}</td>
+                              <td><input id="selectnewscheme" type="checkbox" ng-model="newschemelistamc.selected[y]" ng-true-value="'{{x.SchemeName}}'" ng-false-value="null"></td>
+                            </tr>
+                        </tbody>
+      
+                        <tfoot>
+                            <tr>
+                              <td colspan="6" class="text-center">
+                                <div st-pagination="" st-items-by-page="100" st-displayed-pages="5"></div>
+                              </td>
+                            </tr>
+                          </tfoot>
+                      </table>
+                </div>
+              </div>
+            </div>
+          </div>
+      
+      
+      
+      </div>
+      </div>
+      </div>

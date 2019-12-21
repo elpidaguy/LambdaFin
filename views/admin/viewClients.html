@@ -1,0 +1,370 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-absolute bg-info fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Mouseclicksys</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+      <span class="navbar-toggler-bar navbar-kebab"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="#home" ng-click="mainsection = true;section2 = false; section3 = false">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewAmc">AMC</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#viewClients">Client</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#viewFamilies">Family</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navigation">
+      <form>
+        <div class="input-group no-border">
+          <input type="text" value="" class="form-control" placeholder="Search...">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <i class="now-ui-icons ui-1_zoom-bold"></i>
+            </div>
+          </div>
+        </div>
+      </form>
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="/" target="_self">
+            <i class="now-ui-icons users_single-02"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div class="card" ng-init="getClients();">
+  <div class="card-header">
+    <div class="row">
+     <div class="col-md-6" >
+        <h5 class="title">Client List</h5>
+     </div>
+  
+    <div class="col-md-6" align="right">
+      <!-- Example single danger button -->
+      <div class="btn-group">
+        <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Options
+        </button>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#addnewclient" ng-click="getFamilyNames();">Add New Client</a>
+          <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#uploadClientExcel">Import Excel</a>
+          <!-- <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#createFamily">Create Family</a> -->
+        </div>
+      </div>
+    </div>
+     
+  </div>
+  
+</div>
+	<div class="card-body">
+
+		<table style="margin-top:30px" st-set-filter="customFilter" st-table="displayedCollection" st-safe-src="clists"  class="table table-bordered table-responsive" > 
+      <thead>
+      <tr>
+        <th class="bg-info text-white" ng-repeat="head in headers" st-sort="{{head}}">
+          {{head|titlecase}} 
+        </th>
+        <th class="bg-info text-white"><i class="now-ui-icons loader_gear spin"></i></th>
+      </tr>
+
+      <tr>
+        <th ng-repeat="head in headers">
+       <input st-search="{{head}}"  class="input-sm form-ctrl" type="text" value="" ng-value=""/>
+        </th>
+        <th></th>   
+      </tr>
+      </thead>
+      <tbody style="font-size: 12px;">
+      <tr ng-repeat="rec in displayedCollection" class="text-center" ng-class="{ 'text-info title' : rec['familyhead'] == true }">
+      <td >{{rec['ClientName']}}</td>
+      <td >{{rec['Family']}}</td>
+      <td >{{rec['UCC']}}</td>
+      <td >{{rec['Bank1']}}</td>
+      <td >{{rec['Acc1']}}</td>
+      <td >{{rec['Bank2']}}</td>
+      <td >{{rec['Acc2']}}</td>
+      <td >{{rec['Bank3']}}</td>
+      <td >{{rec['Acc3']}}</td>
+    
+      <td>
+        <!-- Example single danger button -->
+        <div class="btn-group">
+            <button type="button" class="btn btn-danger dropdown-toggle btn-sm btn-icon no-caret" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="now-ui-icons loader_gear"></i>
+              </button>
+            <!-- <button type="button" class="btn btn-danger btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action
+            </button> -->
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="" target="_self" data-toggle="modal" data-target="#editclient" ng-click="getClientByucc(rec['UCC']);getFamilyNames();">Edit</a>
+              <a class="dropdown-item" href="#">Delete</a>
+              <a class="dropdown-item" href="" target="_self" ng-click="makeFamilyhead(rec['UCC'],rec['Family'])">Make Family Head</a>
+            </div>
+          </div>
+        <!-- <button class="btn btn-success btn-fab btn-icon btn-round" style="align:right;" ng-click="getAmcDetails(rec['_id'])" data-toggle="modal" data-target="#editAmc"><i class="fa fa-pencil"></i></button>
+        <button class="btn btn-danger btn-fab btn-icon btn-round" onclick="return confirm('Do You Want To Delete'+rec['Scheme_Code'])" ng-click="deleteAmc(rec['_id'])"><span class="fa fa-trash" data-toggle="tooltip" title="DELETE"></span></button> -->
+      </td>
+      </tr>
+      </tbody>
+      <tfoot>
+        
+        <tr>
+        <td colspan="{{headers.length}}" class="text-center">
+          <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+        </td>
+      </tr>
+      </tfoot>
+
+      </table>
+
+	</div>
+  </div>
+</div>
+
+
+
+  <div class="modal fade" id="addnewclient" tabindex="-1" role="dialog" aria-labelledby="addclientmodallabel" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white text-center">
+            <h5 class="modal-title" id="addclientmodallabel">Add New Client</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form>
+								<div class="row">
+              		<div class="form-group col">
+										<label for="clientName" class="col col-form-label">Client Name</label>
+					    				<div class="col-sm-12">
+					      				<input type="text" class="form-control" ng-model="client.ClientName" placeholder="Client Name" id="clientName" ng-value="client.ClientName" required>
+					    				</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="ucc" class="col col-form-label">UCC</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="client.UCC" placeholder="Client UCC" required>
+											</div>
+									</div>
+								</div>
+
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="family" class="col col-form-label" ng-click="existingFam = true;newFam=false;">Existing Family</label>
+											<div class="col-sm-12" ng-show="existingFam">
+												<select id="familyname" class="form-control" ng-model="client.Family" ng-options="fname for fname in familynames"></select>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="familyname" class="col col-form-label" ng-click="newFam = true;existingFam=false;">New Family</label>
+											<div class="col-sm-12" ng-show="newFam">
+												<input type="text" class="form-control" ng-model="client.Family" placeholder="New Family Name" required>
+											</div>
+									</div>
+              	</div>
+
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="bankname1" class="col col-form-label">Bank Name 1</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="client.Bank1" placeholder="Bank Name 1" required>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="bankacc1" class="col col-form-label">Account 1</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="client.Acc1" placeholder="Bank Account 1" required>
+											</div>
+									</div>
+              	</div>
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="bankname2" class="col col-form-label">Bank Name 2</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="client.Bank2" placeholder="Bank Name 2" required>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="bankacc2" class="col col-form-label">Account 2</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="client.Acc2" placeholder="Bank Account 2" required>
+											</div>
+									</div>
+              	</div>
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="bankname3" class="col col-form-label">Bank Name 3</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="client.Bank3" placeholder="Bank Name 3" required>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="bankacc3" class="col col-form-label">Account 3 </label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="client.Acc3" placeholder="Bank Account 3" required>
+											</div>
+									</div>
+								</div>
+								
+                <button type="button" class="btn btn-primary" ng-click="addNewClient();">Add</button>
+              </form>
+          </div>
+         </div>
+      </div>
+    </div>
+
+
+    <div class="modal fade" id="editclient" tabindex="-1" role="dialog" aria-labelledby="editclientmodallabel" aria-hidden="true" >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-primary text-white text-center">
+            <h5 class="modal-title" id="editclientmodallabel">Edit Client :: {{clientData['ClientName']}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="clientName" class="col col-form-label">Client Name</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['ClientName']" placeholder="Client Name" id="clientName" required>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="ucc" class="col col-form-label">UCC</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['UCC']" placeholder="Client UCC" required>
+											</div>
+									</div>
+              	</div>
+
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="family" class="col col-form-label btn-info" ng-click="existingFam = true;newFam=false;">Existing Family</label>
+											<div class="col-sm-12" ng-show="existingFam">
+															<select id="familyname" class="form-control" ng-model="clientData['Family']" ng-options="fname for fname in familynames"></select>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="familyname" class="col col-form-label btn-info" ng-click="newFam = true;existingFam=false;">New Family</label>
+											<div class="col-sm-12" ng-show="newFam">
+												<input type="text" class="form-control" ng-model="clientData['Family']" placeholder="New Family Name" required>
+											</div>
+									</div>
+              	</div>
+
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="bankname1" class="col col-form-label">Bank Name 1</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['Bank1']" placeholder="Bank Name 1" required>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="bankacc1" class="col col-form-label">Account 1</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['Acc1']" placeholder="Bank Account 1" required>
+											</div>
+									</div>
+              	</div>
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="bankname2" class="col col-form-label">Bank Name 2</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['Bank2']" placeholder="Bank Name 2" required>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="bankacc2" class="col col-form-label">Account 2</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['Acc2']" placeholder="Bank Account 2" required>
+											</div>
+									</div>
+              	</div>
+
+              	<div class="row">
+              		<div class="form-group col">
+										<label for="bankname3" class="col col-form-label">Bank Name 3</label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['Bank3']" placeholder="Bank Name 3" required>
+											</div>
+									</div>
+
+									<div class="form-group col">
+										<label for="bankacc3" class="col col-form-label">Account 3 </label>
+											<div class="col-sm-12">
+												<input type="text" class="form-control" ng-model="clientData['Acc3']" placeholder="Bank Account 3" required>
+											</div>
+									</div>
+              	</div>
+                  <button type="button" class="btn btn-info" ng-click="editClient();">Edit</button>
+              </form>
+          </div>
+         </div>
+      </div>
+    </div>
+
+
+  <div class="modal fade" id="uploadClientExcel" tabindex="-1" role="dialog" aria-labelledby="uploadClientExcelLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header bg-success text-white text-center">
+            <h5 class="modal-title" id="uploadClientExcelLabel">Upload Client List Excel File</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+    
+            <div class="text-center">
+              <div class="form-group">
+                <label for="fup" class="btn btn-info btn-file">Browse for File</label>
+              <div class="col-sm-10">
+                <input type="file" file-model="clistexcel" class="btn btn-info btn-xs" id="fup" style="display: none;" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+              </div>
+            </div>
+            </div>
+    
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary btn-round" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary btn-round" ng-click="uploadclientlistexcel();">Upload</button>
+          </div>
+        </div>
+      </div>
+    </div>
